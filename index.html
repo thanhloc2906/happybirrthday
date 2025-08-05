@@ -1,159 +1,101 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chúc Mừng Sinh Nhật</title>
+  <title>🎉 Happy Birthday 🎉</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
+      background-color: black;
       overflow: hidden;
-      height: 100%;
-      font-family: sans-serif;
-    }
-
-    #intro {
-      background: black;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #startButton {
-      font-size: 32px;
-      padding: 20px 40px;
-      background: #ff4081;
       color: white;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
+      font-family: 'Pacifico', cursive;
+      text-align: center;
     }
 
-    #startButton:hover {
-      transform: scale(1.1);
+    #balloonCake {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: bottom 5s ease-in-out;
     }
 
-    #main {
-      display: none;
-      background: repeating-conic-gradient(
-        from 0deg,
-        #ffcc00 0deg 30deg,
-        #ff6699 30deg 60deg,
-        #66ccff 60deg 90deg
-      );
-      animation: spinBg 10s linear infinite;
-      height: 100%;
-      width: 100%;
+    #fireworks-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 3em;
+      z-index: 2;
       position: relative;
     }
 
-    @keyframes spinBg {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    #cake {
-      width: 200px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: -300px;
-      animation: flyUp 4s ease-out forwards;
-      cursor: pointer;
-    }
-
-    @keyframes flyUp {
-      to {
-        bottom: 40%;
-      }
-    }
-
-    .balloon {
-      position: absolute;
-      width: 50px;
-      top: 50%;
-      animation: float 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      100% { transform: translateY(-20px); }
-    }
-
-    #balloon1 { left: calc(50% - 110px); }
-    #balloon2 { left: calc(50% - 60px); }
-    #balloon3 { left: calc(50% - 10px); }
-    #balloon4 { left: calc(50% + 40px); }
-    #balloon5 { left: calc(50% + 90px); }
-
-    #message {
-      text-align: center;
-      position: absolute;
-      top: 10%;
-      width: 100%;
-      font-size: 36px;
-      font-weight: bold;
-      color: white;
-      text-shadow: 2px 2px 5px black;
-    }
-
-    #instruction {
-      text-align: center;
-      position: absolute;
-      top: 75%;
-      width: 100%;
-      font-size: 24px;
-      color: white;
-      text-shadow: 1px 1px 3px black;
+    audio {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-<div id="intro">
-  <button id="startButton">MỞ</button>
+<h1>Chúc mừng sinh nhật! 🎂</h1>
+
+<canvas id="fireworks-canvas"></canvas>
+
+<div id="balloonCake">
+  <img id="balloon" src="assets/balloon.png" style="width: 100px;">
+  <br>
+  <img id="cake" src="assets/cake_on.gif" style="width: 150px;">
 </div>
 
-<div id="main">
-  <div id="message">🎉 Happy Birthday 🎉</div>
-  <img src="assets/cake_on.gif" id="cake" alt="Bánh sinh nhật">
-  <div id="instruction">Ấn vào bánh để thổi nến</div>
-
-  <!-- Bóng bay -->
-  <img src="assets/balloon.png" class="balloon" id="balloon1">
-  <img src="assets/balloon.png" class="balloon" id="balloon2">
-  <img src="assets/balloon.png" class="balloon" id="balloon3">
-  <img src="assets/balloon.png" class="balloon" id="balloon4">
-  <img src="assets/balloon.png" class="balloon" id="balloon5">
-</div>
-
-<audio id="bgMusic" src="assets/music.mp3" loop></audio>
+<audio id="birthday-audio" autoplay loop>
+  <source src="assets/music.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-  const startBtn = document.getElementById('startButton');
-  const intro = document.getElementById('intro');
-  const main = document.getElementById('main');
-  const bgMusic = document.getElementById('bgMusic');
-  const cake = document.getElementById('cake');
+  // Bóng bay kéo bánh lên và biến mất
+  setTimeout(() => {
+    const balloonCake = document.getElementById('balloonCake');
+    balloonCake.style.bottom = '60%';
 
-  startBtn.onclick = () => {
-    intro.style.display = 'none';
-    main.style.display = 'block';
-    bgMusic.play();
-  };
+    setTimeout(() => {
+      document.getElementById('balloon').style.display = 'none';
+    }, 5000);
+  }, 1000);
+</script>
 
-  let blown = false;
-  cake.onclick = () => {
-    if (!blown) {
-      cake.src = "assets/cake_off.png"; // chuyển ảnh khi đã thổi nến
-      blown = true;
-      document.getElementById("instruction").textContent = "Nến đã được thổi! 🎂";
-      // sau này sẽ thêm hiệu ứng cắt bánh và mở hộp quà
+<!-- Fireworks -->
+<script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.9.2/dist/fireworks.js"></script>
+<script>
+  const container = document.body;
+  const fireworks = new Fireworks.default(container, {
+    rocketsPoint: { min: 0, max: 100 },
+    hue: { min: 0, max: 360 },
+    delay: { min: 15, max: 30 },
+    speed: 2,
+    acceleration: 1.05,
+    friction: 0.95,
+    gravity: 1.5,
+    particles: 100,
+    trace: 3,
+    explosion: 5,
+    boundaries: {
+      top: 0,
+      bottom: container.clientHeight,
+      left: 0,
+      right: container.clientWidth
+    },
+    sound: {
+      enabled: false
     }
-  };
+  });
+  fireworks.start();
 </script>
 
 </body>
