@@ -69,13 +69,12 @@
 <!-- Màn hình 2 -->
 <div id="screen2" class="hidden">
     <canvas id="fireworks"></canvas>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Balloons_icon.svg" 
-         alt="Balloons" class="balloons" id="balloons">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Birthday_cake_icon.svg" 
-         alt="Cake" class="cake" id="cake">
-    <audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+    <img src="assets/balloon.png" alt="Balloons" class="balloons" id="balloons">
+    <img src="assets/cake_on.gif" alt="Cake" class="cake" id="cake">
+    <audio id="music" src="assets/music.mp3"></audio>
 </div>
 
+<script src="assets/fireworks.js"></script>
 <script>
     const openBtn = document.getElementById("openBtn");
     const screen1 = document.getElementById("screen1");
@@ -88,70 +87,13 @@
         screen1.classList.add("hidden");
         screen2.classList.remove("hidden");
         music.play();
+
+        // Sau 4s bóng bay biến mất, bật pháo hoa
         setTimeout(() => {
             balloons.style.display = "none";
-            startFireworks();
+            startFireworks(); // Hàm từ fireworks.js
         }, 4000);
     });
-
-    // Pháo hoa
-    function startFireworks() {
-        const canvas = document.getElementById('fireworks');
-        const ctx = canvas.getContext('2d');
-        let W = window.innerWidth;
-        let H = window.innerHeight;
-        canvas.width = W;
-        canvas.height = H;
-
-        let particles = [];
-
-        function random(min, max) {
-            return Math.random() * (max - min) + min;
-        }
-
-        function createFirework(x, y) {
-            let count = 100;
-            while (count--) {
-                particles.push({
-                    x: x,
-                    y: y,
-                    speed: random(2, 5),
-                    angle: random(0, Math.PI * 2),
-                    radius: 2,
-                    alpha: 1
-                });
-            }
-        }
-
-        function loop() {
-            ctx.fillStyle = "rgba(0,0,0,0.2)";
-            ctx.fillRect(0, 0, W, H);
-
-            for (let i = 0; i < particles.length; i++) {
-                let p = particles[i];
-                p.x += Math.cos(p.angle) * p.speed;
-                p.y += Math.sin(p.angle) * p.speed + 0.5;
-                p.alpha -= 0.01;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${p.alpha})`;
-                ctx.fill();
-
-                if (p.alpha <= 0) {
-                    particles.splice(i, 1);
-                    i--;
-                }
-            }
-            requestAnimationFrame(loop);
-        }
-
-        setInterval(() => {
-            createFirework(W/2, H/2);
-        }, 500);
-
-        loop();
-    }
 </script>
 
 </body>
