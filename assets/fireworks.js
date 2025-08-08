@@ -1,85 +1,65 @@
-// Fireworks.js
-import Fireworks from "https://cdn.jsdelivr.net/npm/fireworks-js@2.9.2/dist/fireworks.module.js";
+function startFireworks() {
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
 
-export function startFireworks() {
-  const container = document.body;
-  const fireworks = new Fireworks(container, {
-    rocketsPoint: { min: 0, max: 100 },// Daniel Shiffman
-// http://codingtra.in
-// https://youtu.be/CKeyIbT3vXI
+    let particles = [];
 
-class Firework {
-  constructor() {
-    this.hu = random(255);
-    this.firework = new Particle(random(width), height, this.hu, true);
-    this.exploded = false;
-    this.particles = [];
-  }
-
-  done() {
-    if (this.exploded && this.particles.length === 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  update() {
-    if (!this.exploded) {
-      this.firework.applyForce(gravity);
-      this.firework.update();
-
-      if (this.firework.vel.y >= 0) {
-        this.exploded = true;
-        this.explode();
-      }
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
     }
 
-    for (let i = this.particles.length - 1; i >= 0; i--) {
-      this.particles[i].applyForce(gravity);
-      this.particles[i].update();
-
-      if (this.particles[i].done()) {
-        this.particles.splice(i, 1);
-      }
-    }
-  }
-
-  explode() {
-    for (let i = 0; i < 100; i++) {
-      const p = new Particle(this.firework.pos.x, this.firework.pos.y, this.hu, false);
-      this.particles.push(p);
-    }
-  }
-
-  show() {
-    if (!this.exploded) {
-      this.firework.show();
+    function createFirework(x, y) {
+        let count = 80;
+        while (count--) {
+            particles.push({
+                x: x,
+                y: y,
+                speed: random(2, 6),
+                angle: random(0, Math.PI * 2),
+                radius: random(1, 3),
+                alpha: 1
+            });
+        }
     }
 
-    for (var i = 0; i < this.particles.length; i++) {
-      this.particles[i].show();
+    function loop() {
+        ctx.fillStyle = "rgba(0,0,0,0.15)";
+        ctx.fillRect(0, 0, W, H);
+
+        for (let i = 0; i < particles.length; i++) {
+            let p = particles[i];
+            p.x += Math.cos(p.angle) * p.speed;
+            p.y += Math.sin(p.angle) * p.speed + 0.3;
+            p.alpha -= 0.015;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${p.alpha})`;
+            ctx.fill();
+
+            if (p.alpha <= 0) {
+                particles.splice(i, 1);
+                i--;
+            }
+        }
+        requestAnimationFrame(loop);
     }
-  }
+
+    setInterval(() => {
+        createFirework(random(100, W - 100), random(100, H / 2));
+    }, 500);
+
+    loop();
+
+    // Cập nhật kích thước canvas khi đổi kích thước cửa sổ
+    window.addEventListener('resize', () => {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+    });
 }
-    hue: { min: 0, max: 360 },
-    delay: { min: 15, max: 30 },
-    speed: 2,
-    acceleration: 1.05,
-    friction: 0.95,
-    gravity: 1.5,
-    particles: 100,
-    trace: 3,
-    explosion: 5,
-    boundaries: {
-      top: 0,
-      bottom: container.clientHeight,
-      left: 0,
-      right: container.clientWidth
-    },
-    sound: { enabled: false }
-  });
-
-  fireworks.start();
-}
-
