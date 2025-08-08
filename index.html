@@ -12,21 +12,15 @@
       color: white;
       font-family: 'Pacifico', cursive;
       text-align: center;
+      position: relative;
     }
 
-    #balloonCake {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      transition: bottom 5s ease-in-out;
-    }
-
+    /* Fireworks canvas ở nền */
     #fireworks-canvas {
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 1;
+      z-index: 0; /* Nằm dưới tất cả */
       pointer-events: none;
     }
 
@@ -37,6 +31,15 @@
       position: relative;
     }
 
+    #balloonCake {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: bottom 5s ease-in-out;
+      z-index: 2;
+    }
+
     audio {
       display: none;
     }
@@ -44,9 +47,10 @@
 </head>
 <body>
 
-<h1>Chúc mừng sinh nhật! 🎂</h1>
-
+<!-- Fireworks canvas -->
 <canvas id="fireworks-canvas"></canvas>
+
+<h1>Chúc mừng sinh nhật! 🎂</h1>
 
 <div id="balloonCake">
   <img id="balloon" src="assets/balloon.png" style="width: 100px;">
@@ -73,8 +77,11 @@
 <!-- Fireworks -->
 <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.9.2/dist/fireworks.js"></script>
 <script>
-  const container = document.body;
-  const fireworks = new Fireworks.default(container, {
+  const canvas = document.getElementById('fireworks-canvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const fireworks = new Fireworks.default(canvas, {
     rocketsPoint: { min: 0, max: 100 },
     hue: { min: 0, max: 360 },
     delay: { min: 15, max: 30 },
@@ -87,15 +94,21 @@
     explosion: 5,
     boundaries: {
       top: 0,
-      bottom: container.clientHeight,
+      bottom: canvas.height,
       left: 0,
-      right: container.clientWidth
+      right: canvas.width
     },
     sound: {
       enabled: false
     }
   });
   fireworks.start();
+
+  // Resize canvas khi thay đổi kích thước màn hình
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
 </script>
 
 </body>
