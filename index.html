@@ -12,23 +12,21 @@
       color: white;
       font-family: 'Pacifico', cursive;
       text-align: center;
-      position: relative;
     }
 
-    /* Fireworks canvas ở nền */
-    #fireworks-canvas {
+    #openBtn {
       position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 0; /* Nằm dưới tất cả */
-      pointer-events: none;
-    }
-
-    h1 {
-      margin-top: 20px;
-      font-size: 3em;
-      z-index: 2;
-      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 15px 40px;
+      font-size: 1.5em;
+      background: gold;
+      color: black;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 5;
     }
 
     #balloonCake {
@@ -40,6 +38,21 @@
       z-index: 2;
     }
 
+    #fireworks-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0; /* Nằm phía sau */
+      pointer-events: none;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 3em;
+      z-index: 2;
+      position: relative;
+    }
+
     audio {
       display: none;
     }
@@ -47,10 +60,11 @@
 </head>
 <body>
 
-<!-- Fireworks canvas -->
-<canvas id="fireworks-canvas"></canvas>
+<button id="openBtn">Mở</button>
 
 <h1>Chúc mừng sinh nhật! 🎂</h1>
+
+<canvas id="fireworks-canvas"></canvas>
 
 <div id="balloonCake">
   <img id="balloon" src="assets/balloon.png" style="width: 100px;">
@@ -58,30 +72,20 @@
   <img id="cake" src="assets/cake_on.gif" style="width: 150px;">
 </div>
 
-<audio id="birthday-audio" autoplay loop>
+<audio id="birthday-audio" loop>
   <source src="assets/music.mp3" type="audio/mpeg">
 </audio>
 
-<script>
-  // Bóng bay kéo bánh lên và biến mất
-  setTimeout(() => {
-    const balloonCake = document.getElementById('balloonCake');
-    balloonCake.style.bottom = '60%';
-
-    setTimeout(() => {
-      document.getElementById('balloon').style.display = 'none';
-    }, 5000);
-  }, 1000);
-</script>
-
-<!-- Fireworks -->
 <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.9.2/dist/fireworks.js"></script>
 <script>
-  const canvas = document.getElementById('fireworks-canvas');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const openBtn = document.getElementById('openBtn');
+  const audio = document.getElementById('birthday-audio');
+  const balloonCake = document.getElementById('balloonCake');
+  const balloon = document.getElementById('balloon');
 
-  const fireworks = new Fireworks.default(canvas, {
+  // Pháo hoa
+  const container = document.body;
+  const fireworks = new Fireworks.default(container, {
     rocketsPoint: { min: 0, max: 100 },
     hue: { min: 0, max: 360 },
     delay: { min: 15, max: 30 },
@@ -94,20 +98,30 @@
     explosion: 5,
     boundaries: {
       top: 0,
-      bottom: canvas.height,
+      bottom: container.clientHeight,
       left: 0,
-      right: canvas.width
+      right: container.clientWidth
     },
-    sound: {
-      enabled: false
-    }
+    sound: { enabled: false }
   });
-  fireworks.start();
 
-  // Resize canvas khi thay đổi kích thước màn hình
-  window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  openBtn.addEventListener('click', () => {
+    // Ẩn nút mở
+    openBtn.style.display = 'none';
+
+    // Phát nhạc
+    audio.play();
+
+    // Bắt đầu pháo hoa
+    fireworks.start();
+
+    // Kéo bánh + bóng bay lên
+    balloonCake.style.bottom = '60%';
+
+    // Sau 5 giây bóng bay biến mất, bánh ở lại
+    setTimeout(() => {
+      balloon.style.display = 'none';
+    }, 5000);
   });
 </script>
 
