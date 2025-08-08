@@ -1,128 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>🎉 Happy Birthday 🎉</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
-  <style>
+<meta charset="UTF-8">
+<title>Chúc mừng sinh nhật</title>
+<style>
     body {
-      margin: 0;
-      background-color: black;
-      overflow: hidden;
-      color: white;
-      font-family: 'Pacifico', cursive;
-      text-align: center;
+        margin: 0;
+        font-family: 'Comic Sans MS', cursive;
+        background-color: black;
+        color: white;
+        text-align: center;
+        overflow: hidden;
     }
-
+    .hidden {
+        display: none;
+    }
+    #screen1, #screen2 {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+    }
     #openBtn {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 15px 40px;
-      font-size: 1.5em;
-      background: gold;
-      color: black;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      z-index: 5;
+        background: yellow;
+        border: none;
+        padding: 15px 30px;
+        font-size: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 20px;
     }
-
-    #balloonCake {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      transition: bottom 5s ease-in-out;
-      z-index: 2;
+    .balloons {
+        position: absolute;
+        bottom: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: moveUp 4s ease-out forwards;
     }
-
-    #fireworks-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 0; /* Nằm phía sau */
-      pointer-events: none;
+    .cake {
+        position: absolute;
+        bottom: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: cakeUp 4s ease-out forwards;
+        z-index: 2;
     }
-
-    h1 {
-      margin-top: 20px;
-      font-size: 3em;
-      z-index: 2;
-      position: relative;
+    @keyframes moveUp {
+        to { bottom: 300px; }
     }
-
-    audio {
-      display: none;
+    @keyframes cakeUp {
+        to { bottom: 300px; }
     }
-  </style>
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+</style>
 </head>
 <body>
 
-<button id="openBtn">Mở</button>
-
-<h1>Chúc mừng sinh nhật! 🎂</h1>
-
-<canvas id="fireworks-canvas"></canvas>
-
-<div id="balloonCake">
-  <img id="balloon" src="assets/balloon.png" style="width: 100px;">
-  <br>
-  <img id="cake" src="assets/cake_on.gif" style="width: 150px;">
+<!-- Màn hình 1 -->
+<div id="screen1">
+    <h1>🎂 Chúc mừng sinh nhật! 🎂</h1>
+    <button id="openBtn">Mở</button>
 </div>
 
-<audio id="birthday-audio" loop>
-  <source src="assets/music.mp3" type="audio/mpeg">
-</audio>
+<!-- Màn hình 2 -->
+<div id="screen2" class="hidden">
+    <canvas id="fireworks"></canvas>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Balloons_icon.svg" 
+         alt="Balloons" class="balloons" id="balloons">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Birthday_cake_icon.svg" 
+         alt="Cake" class="cake" id="cake">
+    <audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.9.2/dist/fireworks.js"></script>
 <script>
-  const openBtn = document.getElementById('openBtn');
-  const audio = document.getElementById('birthday-audio');
-  const balloonCake = document.getElementById('balloonCake');
-  const balloon = document.getElementById('balloon');
+    const openBtn = document.getElementById("openBtn");
+    const screen1 = document.getElementById("screen1");
+    const screen2 = document.getElementById("screen2");
+    const balloons = document.getElementById("balloons");
+    const cake = document.getElementById("cake");
+    const music = document.getElementById("music");
 
-  // Pháo hoa
-  const container = document.body;
-  const fireworks = new Fireworks.default(container, {
-    rocketsPoint: { min: 0, max: 100 },
-    hue: { min: 0, max: 360 },
-    delay: { min: 15, max: 30 },
-    speed: 2,
-    acceleration: 1.05,
-    friction: 0.95,
-    gravity: 1.5,
-    particles: 100,
-    trace: 3,
-    explosion: 5,
-    boundaries: {
-      top: 0,
-      bottom: container.clientHeight,
-      left: 0,
-      right: container.clientWidth
-    },
-    sound: { enabled: false }
-  });
+    openBtn.addEventListener("click", () => {
+        screen1.classList.add("hidden");
+        screen2.classList.remove("hidden");
+        music.play();
+        setTimeout(() => {
+            balloons.style.display = "none";
+            startFireworks();
+        }, 4000);
+    });
 
-  openBtn.addEventListener('click', () => {
-    // Ẩn nút mở
-    openBtn.style.display = 'none';
+    // Pháo hoa
+    function startFireworks() {
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        let W = window.innerWidth;
+        let H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
 
-    // Phát nhạc
-    audio.play();
+        let particles = [];
 
-    // Bắt đầu pháo hoa
-    fireworks.start();
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
 
-    // Kéo bánh + bóng bay lên
-    balloonCake.style.bottom = '60%';
+        function createFirework(x, y) {
+            let count = 100;
+            while (count--) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    speed: random(2, 5),
+                    angle: random(0, Math.PI * 2),
+                    radius: 2,
+                    alpha: 1
+                });
+            }
+        }
 
-    // Sau 5 giây bóng bay biến mất, bánh ở lại
-    setTimeout(() => {
-      balloon.style.display = 'none';
-    }, 5000);
-  });
+        function loop() {
+            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.fillRect(0, 0, W, H);
+
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                p.x += Math.cos(p.angle) * p.speed;
+                p.y += Math.sin(p.angle) * p.speed + 0.5;
+                p.alpha -= 0.01;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${p.alpha})`;
+                ctx.fill();
+
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(loop);
+        }
+
+        setInterval(() => {
+            createFirework(W/2, H/2);
+        }, 500);
+
+        loop();
+    }
 </script>
 
 </body>
