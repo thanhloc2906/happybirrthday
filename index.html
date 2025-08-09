@@ -6,19 +6,11 @@
 <style>
     body {
         margin: 0;
-        background-color: black;
-        overflow: hidden;
-    }
-    .hidden { display: none; }
-
-    #screen1, #screen2 {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
+        background: black;
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-direction: column;
+        height: 100vh;
     }
     button {
         background: yellow;
@@ -28,102 +20,15 @@
         cursor: pointer;
         border: none;
     }
-
-    .balloons {
-        position: absolute;
-        bottom: -300px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: balloonsUp 4s ease-out forwards;
-        z-index: 2;
-    }
-    .cake {
-        position: absolute;
-        bottom: -200px;
-        left: 50%;
-        transform: translateX(-50%);
-        animusic.mp3"></audio>
-</div>
+</style>
+</head>
+<body>
+    <button onclick="nextScreen()">Mở</button>
 
 <script>
-function startCelebration() {
-    // Ẩn màn hình 1, hiện màn hình 2
-    document.getElementById('screen1').classList.add('hidden');
-    document.getElementById('screen2').classList.remove('hidden');
-
-    // Phát nhạc
-    document.getElementById('music').play();
-
-    // Bắt đầu pháo hoa
-    startFireworks();
-
-    // Sau khi bóng bay lên đến vị trí giữa màn hình → biến mất
-    setTimeout(() => {
-        document.getElementById('balloons').style.display = 'none';
-    }, 4000); // trùng với thời gian animation balloonsUp
-}
-
-// Pháo hoa
-function startFireworks() {
-    const canvas = document.getElementById('fireworks');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let fireworks = [];
-    function random(min, max) { return Math.random() * (max - min) + min; }
-
-    function createFirework() {
-        let x = random(0, canvas.width);
-        let y = canvas.height;
-        let targetY = random(100, canvas.height / 2);
-        fireworks.push({ x, y, targetY, sparks: [] });
-    }
-
-    function draw() {
-        ctx.fillStyle = 'rgba(0,0,0,0.2)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        fireworks.forEach((f, i) => {
-            if (f.y > f.targetY) {
-                f.y -= 5;
-                ctx.beginPath();
-                ctx.arc(f.x, f.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = 'white';
-                ctx.fill();
-            } else {
-                if (f.sparks.length === 0) {
-                    for (let s = 0; s < 50; s++) {
-                        f.sparks.push({
-                            x: f.x, y: f.y,
-                            angle: random(0, Math.PI * 2),
-                            speed: random(1, 5),
-                            alpha: 1
-                        });
-                    }
-                }
-                f.sparks.forEach(spark => {
-                    spark.x += Math.cos(spark.angle) * spark.speed;
-                    spark.y += Math.sin(spark.angle) * spark.speed;
-                    spark.alpha -= 0.02;
-                    ctx.fillStyle = `rgba(255, ${Math.random()*255}, 0, ${spark.alpha})`;
-                    ctx.beginPath();
-                    ctx.arc(spark.x, spark.y, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-                if (f.sparks[0].alpha <= 0) {
-                    fireworks.splice(i, 1);
-                }
-            }
-        });
-
-        requestAnimationFrame(draw);
-    }
-
-    setInterval(createFirework, 800);
-    draw();
+function nextScreen() {
+    window.location.href = "screen2.html";
 }
 </script>
-
 </body>
 </html>
