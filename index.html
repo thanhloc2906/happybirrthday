@@ -3,18 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Chúc mừng sinh nhật</title>
-<style><!DOCTYPE html><!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<title>Chúc mừng sinh nhật</title>
 <style>
     body {
         margin: 0;
-        font-family: 'Comic Sans MS', cursive;
         background-color: black;
-        color: white;
-        text-align: center;
         overflow: hidden;
     }
     .hidden { display: none; }
@@ -23,86 +15,55 @@
         position: absolute;
         top: 0; left: 0;
         width: 100%; height: 100%;
-    }
-    h1 {
-        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
     button {
         background: yellow;
-        padding: 15px 30px;
-        font-size: 20px;
+        padding: 15px 40px;
+        font-size: 22px;
         border-radius: 10px;
         cursor: pointer;
         border: none;
-        margin-top: 20px;
     }
 
     .balloons {
         position: absolute;
-        bottom: -200px;
+        bottom: -300px;
         left: 50%;
         transform: translateX(-50%);
-        animation: moveUp 4s ease-out forwards;
+        animation: balloonsUp 4s ease-out forwards;
+        z-index: 2;
     }
     .cake {
         position: absolute;
         bottom: -200px;
         left: 50%;
         transform: translateX(-50%);
-        animation: cakeUp 4s ease-out forwards;
-        z-index: 2;
-    }
-
-    @keyframes moveUp {
-        to { bottom: 300px; }
-    }
-    @keyframes cakeUp {
-        to { bottom: 300px; }
-    }
-
-    canvas {
-        position: absolute;
-        top: 0; left: 0;
-        z-index: 1;
-    }
-</style>
-</head>
-<body>
-    <!-- Màn hình 1 -->
-    <div id="screen1">
-        <h1>🎂 Chúc mừng sinh nhật! 🎂</h1>
-        <button onclick="startCelebration()">Mở</button>
-    </div>
-
-    <!-- Màn hình 2 -->
-    <div id="screen2" class="hidden">
-        <img src="balloons.png" class="balloons" id="balloons">
-        <img src="cake.png" class="cake hidden" id="cake">
-        <canvas id="fireworks"></canvas>
-        <audio id="music" src="happybirthday.mp3"></audio>
-    </div>
+        animusic.mp3"></audio>
+</div>
 
 <script>
 function startCelebration() {
+    // Ẩn màn hình 1, hiện màn hình 2
     document.getElementById('screen1').classList.add('hidden');
     document.getElementById('screen2').classList.remove('hidden');
 
-    let balloons = document.getElementById('balloons');
-    let cake = document.getElementById('cake');
+    // Phát nhạc
+    document.getElementById('music').play();
 
-    // Sau khi bóng bay lên
+    // Bắt đầu pháo hoa
+    startFireworks();
+
+    // Sau khi bóng bay lên đến vị trí giữa màn hình → biến mất
     setTimeout(() => {
-        balloons.style.display = 'none';
-        cake.classList.remove('hidden');
-
-        // Sau khi bánh xuất hiện → bắn pháo hoa + nhạc
-        setTimeout(() => {
-            startFireworks();
-            document.getElementById('music').play();
-        }, 2000);
-    }, 4000);
+        document.getElementById('balloons').style.display = 'none';
+    }, 4000); // trùng với thời gian animation balloonsUp
 }
 
+// Pháo hoa
 function startFireworks() {
     const canvas = document.getElementById('fireworks');
     const ctx = canvas.getContext('2d');
@@ -110,9 +71,7 @@ function startFireworks() {
     canvas.height = window.innerHeight;
 
     let fireworks = [];
-    function random(min, max) {
-        return Math.random() * (max - min) + min;
-    }
+    function random(min, max) { return Math.random() * (max - min) + min; }
 
     function createFirework() {
         let x = random(0, canvas.width);
@@ -165,624 +124,6 @@ function startFireworks() {
     draw();
 }
 </script>
-</body>
-</html>
-
-<html lang="vi"><!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<title>Chúc mừng sinh nhật</title>
-<style>
-    body {
-        margin: 0;
-        font-family: 'Comic Sans MS', cursive;
-        background-color: black;
-        color: white;
-        text-align: center;
-        overflow: hidden;
-    }
-    .hidden {
-        display: none;
-    }
-    #screen1, #screen2 {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-    }
-    #openBtn {
-        background: yellow;
-        border: none;
-        padding: 15px 30px;
-        font-size: 20px;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-    .balloon-cake {
-        position: absolute;
-        bottom: -300px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        z-index: 2;
-    }
-    .balloon-cake img {
-        display: block;
-        margin: 0 auto;
-    }
-    #balloons {
-        width: 100px;
-    }
-    #cakeImg {
-        width: 150px;
-    }
-    @keyframes flyUp {
-        to { bottom: 300px; }
-    }
-    canvas {
-        position: absolute;
-        top: 0; left: 0;
-        z-index: 1;
-    }
-</style>
-</head>
-<body>
-
-<!-- Màn hình 1 -->
-<div id="screen1">
-    <h1>🎂 Chúc mừng sinh nhật! 🎂</h1>
-    <button id="openBtn">Mở</button>
-</div>
-
-<!-- Màn hình 2 -->
-<div id="screen2" class="hidden">
-    <canvas id="fireworks"></canvas>
-    <div class="balloon-cake" id="balloonCake">
-        <img src="assets/balloon.png" alt="Balloons" id="balloons">
-        <img src="assets/cake_on.gif" alt="Cake" id="cakeImg">
-    </div>
-    <audio id="music" src="assets/music.mp3"></audio>
-</div>
-
-<script src="fireworks.js"></script>
-<script>
-    const openBtn = document.getElementById("openBtn");
-    const screen1 = document.getElementById("screen1");
-    const screen2 = document.getElementById("screen2");
-    const balloonCake = document.getElementById("balloonCake");
-    const balloons = document.getElementById("balloons");
-    const music = document.getElementById("music");
-
-    openBtn.addEventListener("click", () => {
-        screen1.classList.add("hidden");
-        screen2.classList.remove("hidden");
-
-        // Bóng bay kéo bánh lên
-        balloonCake.style.animation = "flyUp 4s ease-out forwards";
-
-        // Sau 4s: bóng bay biến mất, pháo hoa bắn, nhạc phát
-        setTimeout(() => {
-            balloons.style.display = "none";
-            startFireworks();
-            music.play();
-        }, 4000);
-    });
-</script>
 
 </body>
 </html>
-
-<head>
-<meta charset="UTF-8">
-<title>Chúc mừng sinh nhật</title>
-<style>
-    body {
-        margin: 0;
-        font-family: 'Comic Sans MS', cursive;
-        background-color: black;
-        color: white;
-        text-align: center;
-        overflow: hidden;
-    }
-    /* Ẩn mặc định */
-    .hidden {
-        display: none;
-    }
-    /* Màn hình 1 & 2 full màn */
-    #screen1, #screen2 {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-    }
-    /* Nút mở */
-    #openBtn {
-        background: yellow;
-        border: none;
-        padding: 15px 30px;
-        font-size: 20px;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-    /* Bóng bay + bánh */
-    .balloon-cake {
-        position: absolute;
-        bottom: -300px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        z-index: 2;
-    }
-    .balloon-cake img {
-        display: block;
-        margin: 0 auto;
-        height: auto;
-    }
-    #balloons {
-        width: 100px;
-    }
-    #cakeImg {
-        width: 150px;
-    }
-    /* Animation kéo lên */
-    @keyframes flyUp {
-        to { bottom: 300px; }
-    }
-    /* Canvas pháo hoa */
-    canvas {
-        position: absolute;
-        top: 0; left: 0;
-        z-index: 1;
-    }
-</style>
-</head>
-<body>
-
-<!-- Màn hình 1 -->
-<div id="screen1">
-    <h1>🎂 Chúc mừng sinh nhật! 🎂</h1>
-    <button id="openBtn">Mở</button>
-</div>
-
-<!-- Màn hình 2 -->
-<div id="screen2" class="hidden">
-    <canvas id="fireworks"></canvas>
-    <div class="balloon-cake" id="balloonCake">
-        <img src="assets/balloon.png" alt="Balloons" id="balloons">
-        <img src="assets/cake_on.gif" alt="Cake" id="cakeImg">
-    </div>
-    <audio id="music" src="assets/music.mp3"></audio>
-</div>
-
-<!-- File pháo hoa -->
-<script src="assets/fireworks.js"></script>
-<script>
-    const openBtn = document.getElementById("openBtn");
-    const screen1 = document.getElementById("screen1");
-    const screen2 = document.getElementById("screen2");
-    const balloonCake = document.getElementById("balloonCake");
-    const balloons = document.getElementById("balloons");
-    const music = document.getElementById("music");
-
-    openBtn.addEventListener("click", () => {
-        // Ẩn màn hình 1, hiện màn hình 2
-        screen1.classList.add("hidden");
-        screen2.classList.remove("hidden");
-
-        // Bắt đầu animation kéo lên
-        balloonCake.style.animation = "flyUp 4s ease-out forwards";
-
-        // Sau 4 giây: bóng bay biến mất, pháo hoa + nhạc bật
-        setTimeout(() => {
-            balloons.style.display = "none";
-            if (typeof startFireworks === "function") {
-                startFireworks(); // Hàm trong fireworks.js
-            }
-            music.play();
-        }, 4000);
-    });
-</script>
-
-</body>
-</html>
-
-    body {<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<title>Chúc mừng sinh nhật</title>
-<style>
-    body {
-        margin: 0;
-        font-family: 'Comic Sans MS', cursive;
-        background-color: black;
-        color: white;
-        text-align: center;
-        overflow: hidden;
-    }
-    .hidden {
-        display: none;
-    }
-    #screen1, #screen2 {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-    }
-    #openBtn {
-        background: yellow;
-        border: none;
-        padding: 15px 30px;
-        font-size: 20px;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-    .balloon-cake {
-        position: absolute;
-        bottom: -300px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: flyUp 4s ease-out forwards;
-        z-index: 2;
-        text-align: center;
-    }
-    .balloon-cake img {
-        max-width: 150px;
-        width: 25vw;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-    }
-    @keyframes flyUp {
-        to { bottom: 300px; }
-    }
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
-</style>
-</head>
-<body>
-
-<!-- Màn hình 1 -->
-<div id="screen1">
-    <h1>🎂 Chúc mừng sinh nhật! 🎂</h1>
-    <button id="openBtn">Mở</button>
-</div>
-
-<!-- Màn hình 2 -->
-<div id="screen2" class="hidden">
-    <canvas id="fireworks"></canvas>
-    <div class="balloon-cake" id="balloonCake">
-        <img src="assets/balloon.png" alt="Balloons" id="balloons">
-        <img src="assets/cake_on.gif" alt="Cake" id="cakeImg">
-    </div>
-    <audio id="music" src="assets/music.mp3"></audio>
-</div>
-
-<script src="assets/fireworks.js"></script>
-<script>
-    const openBtn = document.getElementById("openBtn");
-    const screen1 = document.getElementById("screen1");
-    const screen2 = document.getElementById("screen2");
-    const balloonCake = document.getElementById("balloonCake");
-    const balloons = document.getElementById("balloons");
-    const music = document.getElementById("music");
-
-    openBtn.addEventListener("click", () => {
-        // Chuyển sang màn hình 2
-        screen1.classList.add("hidden");
-        screen2.classList.remove("hidden");
-
-        // Bắt đầu animation bay lên
-        balloonCake.style.animation = "flyUp 4s ease-out forwards";
-
-        // Sau 4s thì bóng bay biến mất, pháo hoa + nhạc bật
-        setTimeout(() => {
-            balloons.style.display = "none";
-            startFireworks(); // từ fireworks.js
-            music.play();
-        }, 4000);
-    });
-</script>
-
-</body>
-</html>
-
-        margin: 0;<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<title>Chúc mừng sinh nhật</title>
-<style>
-    body {
-        margin: 0;
-        font-family: 'Comic Sans MS', cursive;
-        background-color: black;
-        color: white;
-        text-align: center;
-        overflow: hidden;
-    }
-    .hidden {
-        display: none;
-    }
-    #screen1, #screen2 {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-    }
-    #openBtn {
-        background: yellow;
-        border: none;
-        padding: 15px 30px;
-        font-size: 20px;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-    .balloon-cake {
-        position: absolute;
-        bottom: -300px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: flyUp 4s ease-out forwards;
-        z-index: 2;
-        text-align: center;
-    }
-    .balloon-cake img {
-        max-width: 150px;
-        width: 25vw;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-    }
-    @keyframes flyUp {
-        to { bottom: 300px; }
-    }
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
-</style>
-</head>
-<body>
-
-<!-- Màn hình 1 -->
-<div id="screen1">
-    <h1>🎂 Chúc mừng sinh nhật! 🎂</h1>
-    <button id="openBtn">Mở</button>
-</div>
-
-<!-- Màn hình 2 -->
-<div id="screen2" class="hidden">
-    <canvas id="fireworks"></canvas>
-    <div class="balloon-cake" id="balloonCake">
-        <img src="assets/balloon.png" alt="Balloons" id="balloons">
-        <img src="assets/cake_on.gif" alt="Cake" id="cakeImg">
-    </div>
-    <audio id="music" src="assets/music.mp3"></audio>
-</div>
-
-<script src="assets/fireworks.js"></script>
-<script>
-    const openBtn = document.getElementById("openBtn");
-    const screen1 = document.getElementById("screen1");
-    const screen2 = document.getElementById("screen2");
-    const balloons = document.getElementById("balloons");
-    const music = document.getElementById("music");
-
-    openBtn.addEventListener("click", () => {
-        screen1.classList.add("hidden");
-        screen2.classList.remove("hidden");
-        music.play();
-
-        // Sau khi bay xong, ẩn bóng bay và bật pháo hoa
-        setTimeout(() => {
-            balloons.style.display = "none";
-            startFireworks(); // từ fireworks.js
-        }, 4000);
-    });
-</script>
-
-</body>
-</html>
-
-        font-family: 'Comic Sans MS', cursive;<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<title>Chúc mừng sinh nhật</title>
-<style>
-    body {
-        margin: 0;
-        font-family: 'Comic Sans MS', cursive;
-        background-color: black;
-        color: white;
-        text-align: center;
-        overflow: hidden;
-    }
-    .hidden {
-        display: none;
-    }
-    #screen1, #screen2 {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-    }
-    #openBtn {
-        background: yellow;
-        border: none;
-        padding: 15px 30px;
-        font-size: 20px;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-    .balloon-cake {
-        position: absolute;
-        bottom: -300px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: flyUp 5s ease-out forwards;
-        z-index: 2;
-        text-align: center;
-    }
-    .balloon-cake img {
-        max-width: 150px;
-        width: 25vw;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-    }
-    @keyframes flyUp {
-        to { bottom: 300px; }
-    }
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
-</style>
-</head>
-<body>
-
-<!-- Màn hình 1 -->
-<div id="screen1">
-    <h1>🎂 Chúc mừng sinh nhật! 🎂</h1>
-    <button id="openBtn">Mở</button>
-</div>
-
-<!-- Màn hình 2 -->
-<div id="screen2" class="hidden">
-    <canvas id="fireworks"></canvas>
-    <div class="balloon-cake" id="balloonCake">
-        <img src="assets/balloon.png" alt="Balloons">
-        <img src="assets/cake_on.gif" alt="Cake" id="cakeImg">
-    </div>
-    <audio id="music" src="assets/music.mp3"></audio>
-</div>
-
-<script src="assets/fireworks.js"></script>
-<script>
-    const openBtn = document.getElementById("openBtn");
-    const screen1 = document.getElementById("screen1");
-    const screen2 = document.getElementById("screen2");
-    const balloonCake = document.getElementById("balloonCake");
-    const music = document.getElementById("music");
-
-    openBtn.addEventListener("click", () => {
-        screen1.classList.add("hidden");
-        screen2.classList.remove("hidden");
-
-        // Bắt đầu pháo hoa và nhạc ngay khi bay
-        startFireworks();
-        music.play();
-    });
-</script>
-
-</body>
-</html>
-
-        background-color: black;
-        color: white;
-        text-align: center;
-        overflow: hidden;
-    }
-    .hidden {
-        display: none;
-    }
-    #screen1, #screen2 {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-    }
-    #openBtn {
-        background: yellow;
-        border: none;
-        padding: 15px 30px;
-        font-size: 20px;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-    .balloons {
-        position: absolute;
-        bottom: -200px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: moveUp 4s ease-out forwards;
-    }
-    .cake {
-        position: absolute;
-        bottom: -200px;
-        left: 50%;
-        transform: translateX(-50%);
-        animation: cakeUp 4s ease-out forwards;
-        z-index: 2;
-    }
-    @keyframes moveUp {
-        to { bottom: 300px; }
-    }
-    @keyframes cakeUp {
-        to { bottom: 300px; }
-    }
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-    }
-</style>
-</head>
-<body>
-
-<!-- Màn hình 1 -->
-<div id="screen1">
-    <h1>🎂 Chúc mừng sinh nhật! 🎂</h1>
-    <button id="openBtn">Mở</button>
-</div>
-
-<!-- Màn hình 2 -->
-<div id="screen2" class="hidden">
-    <canvas id="fireworks"></canvas>
-    <img src="assets/balloon.png" alt="Balloons" class="balloons" id="balloons">
-    <img src="assets/cake_on.gif" alt="Cake" class="cake" id="cake">
-    <audio id="music" src="assets/music.mp3"></audio>
-</div>
-
-<script src="assets/fireworks.js"></script>
-<script>
-    const openBtn = document.getElementById("openBtn");
-    const screen1 = document.getElementById("screen1");
-    const screen2 = document.getElementById("screen2");
-    const balloons = document.getElementById("balloons");
-    const cake = document.getElementById("cake");
-    const music = document.getElementById("music");
-
-    openBtn.addEventListener("click", () => {
-        screen1.classList.add("hidden");
-        screen2.classList.remove("hidden");
-        music.play();
-
-        // Sau 4s bóng bay biến mất, bật pháo hoa
-        setTimeout(() => {
-            balloons.style.display = "none";
-            startFireworks(); // Hàm từ fireworks.js
-        }, 4000);
-    });
-</script>
-
-</body>
-</html>
-
-
-
-
-
-
