@@ -33,13 +33,13 @@
 <body>
 
 <canvas id="balloons"></canvas>
-<img id="cake" src="cake_on1.gif">
+<img id="cake" src="assets/cake_on1.gif">
 <div id="instruction">Ấn vào bánh để thổi nến 🎂</div>
 <button id="giftBtn" onclick="goToGift()">🎁 Đi nhận quà</button>
 
-<audio id="music" src=".mp3" autoplay loop></audio>
+<audio id="music" src="assets/music.mp3" autoplay loop></audio>
 
-<script src="fireworks.js"></script>
+<script src="assets/fireworks.js"></script>
 <script>
     const balloonsCanvas = document.getElementById("balloons");
     const ctx = balloonsCanvas.getContext("2d");
@@ -83,7 +83,7 @@
     let isOff = false;
     cake.addEventListener("click", () => {
         if (!isOff) {
-            cake.src = "cake_off.png";
+            cake.src = "assets/cake_off.png";
             isOff = true;
             document.getElementById("giftBtn").style.display = "inline-block";
         }
