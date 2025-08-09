@@ -2,43 +2,41 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Chúc mừng sinh nhật</title>
+<title>Màn hình 2</title>
 <style>
     body {
         margin: 0;
-        background: black; /* Màu nền đen */
+        background: black;
         overflow: hidden;
         height: 100vh;
     }
-
-    /* 🎈 Bóng bay */
-    #balloons {
-        position: absolute;
-        bottom: -500px; /* Vị trí ban đầu (ẩn dưới màn hình) */
-        left: 50%; /* Căn giữa theo chiều ngang */
-        transform: translateX(-50%);
-        transition: bottom 3s ease-out; /* Thời gian & hiệu ứng kéo lên */
-        z-index: 3; /* Đè lên bánh */
-        width: 300px; /* 🎯 Điều chỉnh độ rộng bóng bay */
-    }
-
-    /* 🎂 Bánh sinh nhật */
-    #cake {
-        position: absolute;
-        bottom: -300px; /* Vị trí ban đầu (ẩn dưới màn hình) */
-        left: 50%;
-        transform: translateX(-50%);
-        transition: bottom 3s ease-out;
-        z-index: 1; /* Dưới bóng bay */
-        width: 300px; /* 🎯 Điều chỉnh độ rộng bánh */
-    }
-
-    /* Pháo hoa */
+    /* Canvas pháo hoa */
     canvas {
         position: absolute;
         top: 0;
         left: 0;
         z-index: 1;
+    }
+    /* Bọc bóng bay + bánh */
+    #balloonCake {
+        position: absolute;
+        bottom: -500px; /* xuất phát ngoài màn hình */
+        left: 50%;
+        transform: translateX(-50%);
+        transition: bottom 4s ease-out;
+        text-align: center;
+        z-index: 3;
+    }
+    /* Bóng bay */
+    #balloons {
+        width: 150px;
+        display: block;
+        margin: 0 auto;
+    }
+    /* Bánh sinh nhật */
+    #cake {
+        width: 200px;
+        margin-top: -5px; /* cho dính vào dây bóng bay */
     }
 </style>
 </head>
@@ -47,38 +45,41 @@
 <!-- Canvas pháo hoa -->
 <canvas id="fireworks"></canvas>
 
-<!-- Bóng bay -->
-<img id="balloon" src="assets/balloon.png" alt="Balloons">
+<!-- Cụm bóng bay + bánh -->
+<div id="balloonCake">
+    <img id="balloons" src="assets/balloon.png" alt="Balloons">
+    <img id="cake" src="assets/cake_on.gif" alt="Cake">
+</div>
 
-<!-- Bánh sinh nhật -->
-<img id="cake" src="assets/cake_on1.gif" alt="Cake">
-
-<!-- Nhạc nền -->
+<!-- Nhạc -->
 <audio id="music" src="assets/music.mp3"></audio>
 
 <!-- Script pháo hoa -->
 <script src="fireworks.js"></script>
-
 <script>
 window.onload = () => {
-    const balloon= document.getElementById("balloons");
-    const cake = document.getElementById("cake");
+    const balloonCake = document.getElementById("balloonCake");
     const music = document.getElementById("music");
 
-    // 🔊 Bật nhạc
-    music.play();
-
-    // 🎈 Kéo bóng bay và bánh lên
+    // Kéo cụm bóng bay + bánh lên giữa màn hình
     setTimeout(() => {
-        balloons.style.bottom = "250px"; // 🎯 Độ cao bóng bay sau khi bay lên
-        cake.style.bottom = "50px"; // 🎯 Độ cao bánh (để sát dây bóng bay)
+        balloonCake.style.bottom = "50%"; // lên giữa
     }, 500);
 
-    // ⏳ Sau khi bay lên thì làm bóng bay biến mất
+    // Khi đã tới giữa → bóng bay biến mất + phát nhạc + bắn pháo hoa
     setTimeout(() => {
-        balloons.style.opacity = 0; // Ẩn bóng bay
-    }, 3500);
+        document.getElementById("balloons").style.opacity = 0;
+        music.play();
+        startFireworks();
+    }, 4500); // sau khi di chuyển xong
 };
+
+// Hàm gọi pháo hoa
+function startFireworks() {
+    if (typeof initFireworks === "function") {
+        initFireworks();
+    }
+}
 </script>
 </body>
 </html>
