@@ -2,91 +2,124 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Screen 3</title>
+<title>Screen 3 - Mở quà</title>
 <style>
     body {
-        margin: 0;
         background: black;
+        margin: 0;
         overflow: hidden;
         text-align: center;
-        color: white;
-        font-family: sans-serif;
+        font-family: Arial, sans-serif;
     }
-    #giftBox {
+    #gift-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+    #box {
         position: relative;
         display: inline-block;
-        margin-top: 100px;
     }
     #lid {
-        position: absolute;
-        top: 0;
-        left: 0;
-        transition: transform 1s ease, top 1s ease;
-    }
-    #body {
-        position: relative;
-    }
-    #giftImage {
-        display: none;
         width: 300px;
+        position: absolute;
+        top: -150px;
+        left: 0;
+        transition: transform 1s ease-in-out;
+        transform-origin: bottom left;
+        z-index: 2;
+    }
+    #base {
+        width: 300px;
+        position: relative;
+        z-index: 1;
+    }
+    #gift-img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        opacity: 0;
+        transform: translate(-50%, -50%);
+        transition: all 2s ease-in-out;
+        z-index: 0;
+    }
+    #open-btn {
+        padding: 15px 30px;
+        font-size: 22px;
+        background: gold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
         margin-top: 20px;
     }
-    #message {
-        font-size: 28px;
+    #wish {
+        display: none;
         margin-top: 20px;
-        opacity: 0;
-        transition: opacity 2s ease;
+        font-size: 28px;
+        color: red;
+        border: 3px solid gold;
+        padding: 10px;
+        border-radius: 10px;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
     }
     #author {
-        font-size: 18px;
-        margin-top: 50px;
-        opacity: 0;
-        transition: opacity 1s ease;
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        color: white;
+        font-size: 14px;
+    }
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
     }
 </style>
 </head>
 <body>
 
 <canvas id="fireworksCanvas"></canvas>
-<audio id="music" src="assets/music.mp3" autoplay loop></audio>
 
-<div id="giftBox">
-    <img id="lid" src="assets/naphop.png" width="300">
-    <img id="body" src="assets/thanhop.jpg" width="300">
+<audio id="bg-music" src="assets/music.mp3" autoplay loop></audio>
+
+<div id="gift-container">
+    <div id="box">
+        <img id="lid" src="assets/naphop.png" alt="Nắp hộp">
+        <img id="base" src="assets/thanhop.jpg" alt="Thân hộp">
+        <img id="gift-img" src="assets/anhqua.jpg" alt="Quà">
+    </div>
+    <div>
+        <button id="open-btn">Mở quà</button>
+    </div>
+    <div id="wish">Chúc mừng sinh nhật</div>
 </div>
-<br>
-<button id="openBtn">Mở quà</button>
 
-<img id="giftImage" src="assets/anhqua.jpg">
-<div id="message">🎉 Chúc mừng sinh nhật! 🎂</div>
-<div id="author">editer: thanhloc | SĐT: 0823151088</div>
+<div id="author">Tác giả: thanhloc - SĐT: 0823151088</div>
 
 <script src="assets/fireworks.js"></script>
 <script>
-    // Giữ nhạc tiếp tục phát
-    const music = document.getElementById("music");
-    const savedTime = localStorage.getItem("musicTime");
-    if (savedTime) {
-        music.currentTime = parseFloat(savedTime);
-    }
+    const lid = document.getElementById('lid');
+    const giftImg = document.getElementById('gift-img');
+    const openBtn = document.getElementById('open-btn');
+    const wish = document.getElementById('wish');
 
-    // Bắn pháo hoa liên tục
-    startFireworks("fireworksCanvas");
-
-    document.getElementById("openBtn").addEventListener("click", () => {
-        const lid = document.getElementById("lid");
-        lid.style.transform = "rotate(-30deg)";
-        lid.style.top = "-150px";
-
+    openBtn.addEventListener('click', () => {
+        lid.style.transform = "rotate(-45deg)";
         setTimeout(() => {
-            document.getElementById("giftImage").style.display = "block";
-            document.getElementById("message").style.opacity = 1;
+            giftImg.style.width = "250px";
+            giftImg.style.opacity = "1";
+            setTimeout(() => {
+                wish.style.display = "block";
+            }, 2000);
         }, 1000);
-
-        setTimeout(() => {
-            document.getElementById("author").style.opacity = 1;
-        }, 3000);
     });
 </script>
+
 </body>
 </html>

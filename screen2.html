@@ -2,98 +2,95 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Screen 2</title>
+<title>Screen 2 - Bánh sinh nhật</title>
 <style>
     body {
-        margin: 0;
         background: black;
+        margin: 0;
         overflow: hidden;
-        text-align: center;
         color: white;
-        font-family: sans-serif;
+        text-align: center;
+        font-family: Arial, sans-serif;
     }
-    #balloons { position: absolute; width: 100%; height: 100%; }
+    #cake-container {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: top 5s ease-in-out;
+        text-align: center;
+    }
+    #balloons {
+        width: 150px;
+        display: block;
+        margin: 0 auto;
+    }
     #cake {
-        width: 300px;
-        transition: transform 0.3s ease;
+        width: 250px;
+        display: block;
+        margin: 0 auto;
     }
-    #instruction { font-size: 24px; margin-top: 20px; display: none; }
-    #giftBtn {
-        padding: 15px 30px;
-        font-size: 22px;
-        margin-top: 30px;
+    #message {
         display: none;
-        cursor: pointer;
+        margin-top: 10px;
+        font-size: 24px;
+        color: yellow;
+    }
+    #next-btn {
+        display: none;
+        padding: 10px 20px;
+        font-size: 20px;
+        margin-top: 20px;
         background: gold;
         border: none;
-        border-radius: 8px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
     }
 </style>
 </head>
 <body>
 
-<canvas id="balloons"></canvas>
-<img id="cake" src="assets/cake_on1.gif">
-<div id="instruction">Ấn vào bánh để thổi nến 🎂</div>
-<button id="giftBtn" onclick="goToGift()">🎁 Đi nhận quà</button>
+<canvas id="fireworksCanvas"></canvas>
 
-<audio id="music" src="assets/music.mp3" autoplay loop></audio>
+<audio id="bg-music" src="assets/music.mp3" autoplay loop></audio>
+
+<div id="cake-container">
+    <img id="balloons" src="assets/balloon.png" alt="Bóng bay">
+    <img id="cake" src="assets/cake_on1.gif" alt="Bánh sinh nhật">
+    <div id="message">Ấn vào bánh để thổi nến</div>
+    <button id="next-btn" onclick="window.location.href='screen3.html'">Đi nhận quà</button>
+</div>
 
 <script src="assets/fireworks.js"></script>
 <script>
-    const balloonsCanvas = document.getElementById("balloons");
-    const ctx = balloonsCanvas.getContext("2d");
-    let balloons = [];
+    const cakeContainer = document.getElementById('cake-container');
+    const balloons = document.getElementById('balloons');
+    const cake = document.getElementById('cake');
+    const message = document.getElementById('message');
+    const nextBtn = document.getElementById('next-btn');
 
-    function resize() {
-        balloonsCanvas.width = window.innerWidth;
-        balloonsCanvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resize);
-    resize();
+    // Kéo bánh lên
+    setTimeout(() => {
+        cakeContainer.style.top = "750px";
+        setTimeout(() => {
+            balloons.style.display = "none";
+            message.style.display = "block";
+        }, 5000);
+    }, 500);
 
-    for (let i = 0; i < 20; i++) {
-        balloons.push({
-            x: Math.random() * window.innerWidth,
-            y: window.innerHeight + Math.random() * 500,
-            r: 20 + Math.random() * 20,
-            speed: 2 + Math.random() * 2,
-            color: `hsl(${Math.random()*360}, 80%, 60%)`
-        });
-    }
-
-    function drawBalloons() {
-        ctx.clearRect(0,0,balloonsCanvas.width, balloonsCanvas.height);
-        balloons.forEach(b => {
-            ctx.beginPath();
-            ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
-            ctx.fillStyle = b.color;
-            ctx.fill();
-            b.y -= b.speed;
-        });
-        if (balloons.every(b => b.y + b.r < 0)) {
-            document.getElementById("instruction").style.display = "block";
-        } else {
-            requestAnimationFrame(drawBalloons);
-        }
-    }
-    drawBalloons();
-
-    const cake = document.getElementById("cake");
-    let isOff = false;
-    cake.addEventListener("click", () => {
-        if (!isOff) {
-            cake.src = "assets/cake_off.png";
-            isOff = true;
-            document.getElementById("giftBtn").style.display = "inline-block";
-        }
+    // Khi ấn bánh
+    cake.addEventListener('click', () => {
+        cake.src = "assets/cake_off.png";
+        message.style.display = "none";
+        nextBtn.style.display = "inline-block";
     });
-
-    function goToGift() {
-        // Lưu trạng thái nhạc để phát tiếp
-        localStorage.setItem("musicTime", document.getElementById("music").currentTime);
-        window.location.href = "screen3.html";
-    }
 </script>
+
 </body>
 </html>
