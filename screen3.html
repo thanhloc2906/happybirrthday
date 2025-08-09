@@ -2,126 +2,91 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Màn hình 3</title>
+<title>Screen 3</title>
 <style>
     body {
         margin: 0;
         background: black;
         overflow: hidden;
-        height: 100vh;
         text-align: center;
         color: white;
-    }
-    canvas {
-        position: absolute;
-        top: 0; left: 0;
-        z-index: 1;
+        font-family: sans-serif;
     }
     #giftBox {
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 3;
+        position: relative;
+        display: inline-block;
+        margin-top: 100px;
     }
-    #naphop, #thanhop {
-        width: 500px;
-    }
-    #naphop {
+    #lid {
         position: absolute;
         top: 0;
-        left: 35%;
-        transform: translateX(-50%);
-        transition: top 1s;
-        z-index: 4;
+        left: 0;
+        transition: transform 1s ease, top 1s ease;
     }
-    #anhqua {
+    #body {
+        position: relative;
+    }
+    #giftImage {
         display: none;
-        width: 400px;
-        margin-top: 20px;
-    }
-    #openBtn {
-        padding: 10px 20px;
-        font-size: 20px;
-        background: gold;
-        color: black;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
+        width: 300px;
         margin-top: 20px;
     }
     #message {
         font-size: 28px;
-        margin-top: 15px;
-        display: none;
+        margin-top: 20px;
+        opacity: 0;
+        transition: opacity 2s ease;
     }
     #author {
-        font-size: 14px;
-        margin-top: 10px;
-        opacity: 0.7;
-        display: none;
+        font-size: 18px;
+        margin-top: 50px;
+        opacity: 0;
+        transition: opacity 1s ease;
     }
 </style>
 </head>
 <body>
 
-<canvas id="fireworks"></canvas>
+<canvas id="fireworksCanvas"></canvas>
+<audio id="music" src="music.mp3" autoplay loop></audio>
 
 <div id="giftBox">
-    <img id="naphop" src="assets/naphop.png">
-    <img id="thanhop" src="assets/thanhop.jpg">
-    <br>
-    <button id="openBtn">Mở quà 🎁</button>
-    <img id="anhqua" src="assets/anhqua.jpg">
-    <div id="message"></div>
-    <div id="author">Tác giả: Lộc Thành - SĐT: 0123456789</div>
+    <img id="lid" src="naphop.png" width="300">
+    <img id="body" src="thanhop.jpg" width="300">
 </div>
+<br>
+<button id="openBtn">Mở quà</button>
 
-<audio id="music" src="assets/music.mp3" loop></audio>
+<img id="giftImage" src="anhqua.jpg">
+<div id="message">🎉 Chúc mừng sinh nhật! 🎂</div>
+<div id="author">editer: thanhloc | SĐT: 0823151088</div>
 
-<script src="assets/fireworks.js"></script>
+<script src="fireworks.js"></script>
 <script>
-window.onload = () => {
-    const naphop = document.getElementById("naphop");
-    const anhqua = document.getElementById("anhqua");
-    const message = document.getElementById("message");
-    const author = document.getElementById("author");
-    const openBtn = document.getElementById("openBtn");
+    // Giữ nhạc tiếp tục phát
     const music = document.getElementById("music");
+    const savedTime = localStorage.getItem("musicTime");
+    if (savedTime) {
+        music.currentTime = parseFloat(savedTime);
+    }
 
-    music.play();
-    startFireworks();
+    // Bắn pháo hoa liên tục
+    startFireworks("fireworksCanvas");
 
-    openBtn.addEventListener("click", () => {
-        naphop.style.top = "-200px";
+    document.getElementById("openBtn").addEventListener("click", () => {
+        const lid = document.getElementById("lid");
+        lid.style.transform = "rotate(-30deg)";
+        lid.style.top = "-150px";
+
         setTimeout(() => {
-            anhqua.style.display = "block";
-            typeWriter("🎉 Chúc mừng sinh nhật! Chúc bạn luôn vui vẻ và hạnh phúc 🎉", message, () => {
-                author.style.display = "block";
-            });
+            document.getElementById("giftImage").style.display = "block";
+            document.getElementById("message").style.opacity = 1;
         }, 1000);
+
+        setTimeout(() => {
+            document.getElementById("author").style.opacity = 1;
+        }, 3000);
     });
-};
-
-function typeWriter(text, element, callback) {
-    element.style.display = "block";
-    let i = 0;
-    function typing() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(typing, 50);
-        } else {
-            if (callback) callback();
-        }
-    }
-    typing();
-}
-
-function startFireworks() {
-    if (typeof initFireworks === "function") {
-        initFireworks();
-    }
-}
 </script>
 </body>
 </html>
