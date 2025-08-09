@@ -48,10 +48,10 @@
 <canvas id="fireworks"></canvas>
 
 <!-- Bóng bay -->
-<img id="balloons" src="assets/balloon.png" alt="Balloons">
+<img id="balloon" src="assets/balloon.png" alt="Balloons">
 
 <!-- Bánh sinh nhật -->
-<img id="cake" src="assets/cake_on.gif" alt="Cake">
+<img id="cake" src="assets/cake_on1.gif" alt="Cake">
 
 <!-- Nhạc nền -->
 <audio id="music" src="assets/music.mp3"></audio>
@@ -61,7 +61,7 @@
 
 <script>
 window.onload = () => {
-    const balloons = document.getElementById("balloons");
+    const balloon= document.getElementById("balloons");
     const cake = document.getElementById("cake");
     const music = document.getElementById("music");
 
@@ -71,7 +71,7 @@ window.onload = () => {
     // 🎈 Kéo bóng bay và bánh lên
     setTimeout(() => {
         balloons.style.bottom = "250px"; // 🎯 Độ cao bóng bay sau khi bay lên
-        cake.style.bottom = "50px"; // 🎯 Độ cao bánh (để sát dây bóng bay)
+        cake.style.bottom = "150px"; // 🎯 Độ cao bánh (để sát dây bóng bay)
     }, 500);
 
     // ⏳ Sau khi bay lên thì làm bóng bay biến mất
