@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Screen 3 - Mở quà</title>
+<style>
+    body {
+        margin: 0;
+        background: black;
+        overflow: hidden;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+
+    #giftBox {
+        position: relative;
+        width: 400px;
+        height: 400px;
+    }
+
+    #boxBottom {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+
+    #boxTop {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        transition: transform 1s ease-out;
+        z-index: 2;
+    }
+
+    #giftImage {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        opacity: 0;
+        transition: opacity 1s ease-in;
+        z-index: 1;
+    }
+
+    #openButton {
+        margin-top: 20px;
+        padding: 12px 25px;
+        font-size: 18px;
+        background: crimson;
+        border: none;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    #message {
+        margin-top: 20px;
+        font-size: 20px;
+        min-height: 40px;
+        white-space: pre-wrap;
+        text-align: center;
+    }
+
+    #authorBox {
+        margin-top: 15px;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 1s ease-in;
+    }
+</style>
+</head>
+<body>
+
+<div id="giftBox">
+    <img id="boxTop" src="assets/naphop.png" alt="Nắp hộp">
+    <img id="boxBottom" src="assets/thanhop.png" alt="Thân hộp">
+    <img id="giftImage" src="assets/anhqua.jpg" alt="Ảnh quà">
+</div>
+
+<button id="openButton">Mở quà</button>
+
+<div id="message"></div>
+<div id="authorBox">Tác giả: Lộc Thành - SĐT: 0123456789</div>
+
+<script>
+const boxTop = document.getElementById("boxTop");
+const giftImage = document.getElementById("giftImage");
+const messageEl = document.getElementById("message");
+const authorBox = document.getElementById("authorBox");
+const openButton = document.getElementById("openButton");
+
+openButton.addEventListener("click", () => {
+    // Bay nắp hộp lên
+    boxTop.style.transform = "translateY(-200px)";
+    
+    // Hiện ảnh quà
+    setTimeout(() => {
+        giftImage.style.opacity = 1;
+        typeMessage("Chúc mừng sinh nhật! 🎉\nChúc bạn tuổi mới nhiều niềm vui và hạnh phúc ❤️");
+    }, 800);
+
+    // Ẩn nút mở
+    openButton.style.display = "none";
+});
+
+function typeMessage(text) {
+    let i = 0;
+    const speed = 50; // tốc độ gõ
+    messageEl.textContent = "";
+
+    function typeNext() {
+        if (i < text.length) {
+            messageEl.textContent += text.charAt(i);
+            i++;
+            setTimeout(typeNext, speed);
+        } else {
+            // Hiện ô tác giả sau khi gõ xong
+            setTimeout(() => {
+                authorBox.style.opacity = 1;
+            }, 500);
+        }
+    }
+    typeNext();
+}
+</script>
+
+</body>
+</html>
