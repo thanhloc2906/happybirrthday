@@ -9,6 +9,9 @@
         background: black;
         overflow: hidden;
         height: 100vh;
+        font-family: sans-serif;
+        color: white;
+        text-align: center;
     }
     /* Canvas pháo hoa */
     canvas {
@@ -20,23 +23,43 @@
     /* Bọc bóng bay + bánh */
     #balloonCake {
         position: absolute;
-        bottom: -800px; /* xuất phát ngoài màn hình (điều chỉnh theo kích thước mới) */
         left: 50%;
-        transform: translateX(-50%);
-        transition: bottom 4s ease-out;
+        transform: translate(-50%, -50%);
+        top: 50%;
         text-align: center;
         z-index: 3;
     }
     /* Bóng bay */
     #balloons {
-        width: 800px;
+        width: 760px;
         display: block;
         margin: 0 auto;
+        transition: opacity 1s ease-out;
     }
     /* Bánh sinh nhật */
     #cake {
-        width: 800px;
-        margin-top: -100px; /* dính sát dây bóng bay */
+        width: 750px;
+        margin-top: -80px;
+        cursor: pointer;
+    }
+    /* Chữ hướng dẫn */
+    #instruction {
+        margin-top: 10px;
+        font-size: 24px;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    /* Nút đi nhận quà */
+    #giftButton {
+        display: none;
+        margin-top: 15px;
+        padding: 12px 24px;
+        background: gold;
+        color: black;
+        font-size: 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
     }
 </style>
 </head>
@@ -49,6 +72,8 @@
 <div id="balloonCake">
     <img id="balloons" src="assets/balloon.png" alt="Balloons">
     <img id="cake" src="assets/cake_on1.gif" alt="Cake">
+    <div id="instruction">Ấn vào bánh để thổi nến</div>
+    <button id="giftButton">Đi nhận quà</button>
 </div>
 
 <!-- Nhạc -->
@@ -59,19 +84,40 @@
 <script>
 window.onload = () => {
     const balloonCake = document.getElementById("balloonCake");
+    const balloons = document.getElementById("balloons");
+    const cake = document.getElementById("cake");
+    const instruction = document.getElementById("instruction");
+    const giftButton = document.getElementById("giftButton");
     const music = document.getElementById("music");
 
-    // Kéo cụm bóng bay + bánh lên giữa màn hình
+    // Lúc đầu cụm ở ngoài màn hình
+    balloonCake.style.top = "150%";
+
+    // Kéo cụm lên giữa màn hình
     setTimeout(() => {
-        balloonCake.style.bottom = "30%"; // lên giữa
+        balloonCake.style.transition = "top 4s ease-out";
+        balloonCake.style.top = "50%";
     }, 500);
 
-    // Khi đã tới giữa → bóng bay biến mất + phát nhạc + bắn pháo hoa
+    // Khi đã tới giữa → bóng bay biến mất + phát nhạc + bắn pháo hoa + hiện chữ hướng dẫn
     setTimeout(() => {
-        document.getElementById("balloons").style.opacity = 0;
+        balloons.style.opacity = 0;
         music.play();
         startFireworks();
-    }, 4500); // sau khi di chuyển xong
+        instruction.style.opacity = 1;
+    }, 4500);
+
+    // Khi click vào bánh → đổi ảnh → hiện nút nhận quà
+    cake.addEventListener("click", () => {
+        cake.src = "assets/cake_off.png"; // đổi sang ảnh bánh đã tắt nến
+        instruction.style.display = "none"; // ẩn hướng dẫn
+        giftButton.style.display = "inline-block"; // hiện nút nhận quà
+    });
+
+    // Khi click nút nhận quà → chuyển sang screen3
+    giftButton.addEventListener("click", () => {
+        window.location.href = "screen3.html";
+    });
 };
 
 // Hàm gọi pháo hoa
