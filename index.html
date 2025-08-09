@@ -3,7 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <title>Chúc mừng sinh nhật</title>
-<style><!DOCTYPE html>
+<style><!DOCTYPE html><!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Chúc mừng sinh nhật</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Comic Sans MS', cursive;
+        background-color: black;
+        color: white;
+        text-align: center;
+        overflow: hidden;
+    }
+    .hidden { display: none; }
+
+    #screen1, #screen2 {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+    }
+    h1 {
+        margin-top: 20px;
+    }
+    button {
+        background: yellow;
+        padding: 15px 30px;
+        font-size: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        border: none;
+        margin-top: 20px;
+    }
+
+    .balloons {
+        position: absolute;
+        bottom: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: moveUp 4s ease-out forwards;
+    }
+    .cake {
+        position: absolute;
+        bottom: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: cakeUp 4s ease-out forwards;
+        z-index: 2;
+    }
+
+    @keyframes moveUp {
+        to { bottom: 300px; }
+    }
+    @keyframes cakeUp {
+        to { bottom: 300px; }
+    }
+
+    canvas {
+        position: absolute;
+        top: 0; left: 0;
+        z-index: 1;
+    }
+</style>
+</head>
+<body>
+    <!-- Màn hình 1 -->
+    <div id="screen1">
+        <h1>🎂 Chúc mừng sinh nhật! 🎂</h1>
+        <button onclick="startCelebration()">Mở</button>
+    </div>
+
+    <!-- Màn hình 2 -->
+    <div id="screen2" class="hidden">
+        <img src="balloons.png" class="balloons" id="balloons">
+        <img src="cake.png" class="cake hidden" id="cake">
+        <canvas id="fireworks"></canvas>
+        <audio id="music" src="happybirthday.mp3"></audio>
+    </div>
+
+<script>
+function startCelebration() {
+    document.getElementById('screen1').classList.add('hidden');
+    document.getElementById('screen2').classList.remove('hidden');
+
+    let balloons = document.getElementById('balloons');
+    let cake = document.getElementById('cake');
+
+    // Sau khi bóng bay lên
+    setTimeout(() => {
+        balloons.style.display = 'none';
+        cake.classList.remove('hidden');
+
+        // Sau khi bánh xuất hiện → bắn pháo hoa + nhạc
+        setTimeout(() => {
+            startFireworks();
+            document.getElementById('music').play();
+        }, 2000);
+    }, 4000);
+}
+
+function startFireworks() {
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let fireworks = [];
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function createFirework() {
+        let x = random(0, canvas.width);
+        let y = canvas.height;
+        let targetY = random(100, canvas.height / 2);
+        fireworks.push({ x, y, targetY, sparks: [] });
+    }
+
+    function draw() {
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        fireworks.forEach((f, i) => {
+            if (f.y > f.targetY) {
+                f.y -= 5;
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+            } else {
+                if (f.sparks.length === 0) {
+                    for (let s = 0; s < 50; s++) {
+                        f.sparks.push({
+                            x: f.x, y: f.y,
+                            angle: random(0, Math.PI * 2),
+                            speed: random(1, 5),
+                            alpha: 1
+                        });
+                    }
+                }
+                f.sparks.forEach(spark => {
+                    spark.x += Math.cos(spark.angle) * spark.speed;
+                    spark.y += Math.sin(spark.angle) * spark.speed;
+                    spark.alpha -= 0.02;
+                    ctx.fillStyle = `rgba(255, ${Math.random()*255}, 0, ${spark.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(spark.x, spark.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                if (f.sparks[0].alpha <= 0) {
+                    fireworks.splice(i, 1);
+                }
+            }
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    setInterval(createFirework, 800);
+    draw();
+}
+</script>
+</body>
+</html>
+
 <html lang="vi"><!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -616,6 +780,7 @@
 
 </body>
 </html>
+
 
 
 
