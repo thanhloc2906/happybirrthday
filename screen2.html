@@ -6,26 +6,34 @@
 <style>
     body {
         margin: 0;
-        background: black;
+        background: black; /* Màu nền đen */
         overflow: hidden;
         height: 100vh;
     }
-    #cake {
-        position: absolute;
-        bottom: -300px;
-        left: 50%;
-        transform: translateX(-50%);
-        transition: bottom 3s ease-out;
-        z-index: 2;
-    }
+
+    /* 🎈 Bóng bay */
     #balloons {
         position: absolute;
-        bottom: -500px;
+        bottom: -500px; /* Vị trí ban đầu (ẩn dưới màn hình) */
+        left: 50%; /* Căn giữa theo chiều ngang */
+        transform: translateX(-50%);
+        transition: bottom 3s ease-out; /* Thời gian & hiệu ứng kéo lên */
+        z-index: 3; /* Đè lên bánh */
+        width: 200px; /* 🎯 Điều chỉnh độ rộng bóng bay */
+    }
+
+    /* 🎂 Bánh sinh nhật */
+    #cake {
+        position: absolute;
+        bottom: -300px; /* Vị trí ban đầu (ẩn dưới màn hình) */
         left: 50%;
         transform: translateX(-50%);
         transition: bottom 3s ease-out;
-        z-index: 3;
+        z-index: 2; /* Dưới bóng bay */
+        width: 150px; /* 🎯 Điều chỉnh độ rộng bánh */
     }
+
+    /* Pháo hoa */
     canvas {
         position: absolute;
         top: 0;
@@ -36,30 +44,39 @@
 </head>
 <body>
 
+<!-- Canvas pháo hoa -->
 <canvas id="fireworks"></canvas>
+
+<!-- Bóng bay -->
 <img id="balloons" src="assets/balloon.png" alt="Balloons">
+
+<!-- Bánh sinh nhật -->
 <img id="cake" src="assets/cake_on.gif" alt="Cake">
+
+<!-- Nhạc nền -->
 <audio id="music" src="assets/music.mp3"></audio>
 
+<!-- Script pháo hoa -->
 <script src="fireworks.js"></script>
+
 <script>
 window.onload = () => {
     const balloons = document.getElementById("balloons");
     const cake = document.getElementById("cake");
     const music = document.getElementById("music");
 
-    // Bật nhạc
+    // 🔊 Bật nhạc
     music.play();
 
-    // Kéo bóng bay + bánh lên
+    // 🎈 Kéo bóng bay và bánh lên
     setTimeout(() => {
-        balloons.style.bottom = "200px";
-        cake.style.bottom = "0px";
+        balloons.style.bottom = "250px"; // 🎯 Độ cao bóng bay sau khi bay lên
+        cake.style.bottom = "50px"; // 🎯 Độ cao bánh (để sát dây bóng bay)
     }, 500);
 
-    // Sau khi kéo xong, làm bóng bay biến mất
+    // ⏳ Sau khi bay lên thì làm bóng bay biến mất
     setTimeout(() => {
-        balloons.style.opacity = 0;
+        balloons.style.opacity = 0; // Ẩn bóng bay
     }, 3500);
 };
 </script>
