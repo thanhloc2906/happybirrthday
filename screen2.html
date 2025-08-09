@@ -9,7 +9,7 @@
         background: black;
         overflow: hidden;
         height: 100vh;
-        font-family: sans-serif;
+        font-family: Arial, sans-serif;
         color: white;
         text-align: center;
     }
@@ -20,43 +20,61 @@
         left: 0;
         z-index: 1;
     }
-    /* Bọc bóng bay + bánh */
+    /* Cụm bóng bay + bánh */
     #balloonCake {
         position: absolute;
+        bottom: -800px;
         left: 50%;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        text-align: center;
+        transform: translateX(-50%);
+        transition: bottom 4s ease-out;
         z-index: 3;
     }
     /* Bóng bay */
     #balloons {
-        width: 760px;
+        width: 800px;
         display: block;
         margin: 0 auto;
-        transition: opacity 1s ease-out;
     }
-    /* Bánh sinh nhật */
-    #cake {
-        width: 750px;
-        margin-top: -80px;
-        cursor: pointer;
+    /* Bánh sinh nhật container */
+    #cakeWrapper {
+        position: relative;
+        width: 800px;
+        height: auto;
+        margin: -70px auto 0 auto; /* dính sát dây bóng bay */
+    }
+    /* Hai trạng thái bánh */
+    .cakeImg {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: opacity 0.5s ease; /* chuyển mượt */
+    }
+    #cake_on {
+        opacity: 1;
+        z-index: 2;
+    }
+    #cake_off {
+        opacity: 0;
+        z-index: 1;
     }
     /* Chữ hướng dẫn */
-    #instruction {
-        margin-top: 10px;
-        font-size: 24px;
-        opacity: 0;
-        transition: opacity 1s;
+    #hint {
+        margin-top: 280px;
+        font-size: 28px;
+        animation: blink 1.2s infinite;
+        cursor: pointer;
     }
-    /* Nút đi nhận quà */
-    #giftButton {
+    @keyframes blink {
+        50% { opacity: 0.4; }
+    }
+    /* Nút nhận quà */
+    #giftBtn {
         display: none;
-        margin-top: 15px;
-        padding: 12px 24px;
-        background: gold;
-        color: black;
+        margin-top: 20px;
+        padding: 12px 25px;
         font-size: 20px;
+        background: gold;
         border: none;
         border-radius: 10px;
         cursor: pointer;
@@ -71,52 +89,50 @@
 <!-- Cụm bóng bay + bánh -->
 <div id="balloonCake">
     <img id="balloons" src="assets/balloon.png" alt="Balloons">
-    <img id="cake" src="assets/cake_on1.gif" alt="Cake">
-    <div id="instruction">Ấn vào bánh để thổi nến</div>
-    <button id="giftButton">Đi nhận quà</button>
+    <div id="cakeWrapper">
+        <img id="cake_on" class="cakeImg" src="assets/cake_on1.gif" alt="Cake On">
+        <img id="cake_off" class="cakeImg" src="assets/cake_off.png" alt="Cake Off">
+    </div>
 </div>
+
+<!-- Chữ hướng dẫn -->
+<div id="hint">🎂 Ấn vào bánh để thổi nến 🎂</div>
+
+<!-- Nút nhận quà -->
+<button id="giftBtn" onclick="goToScreen3()">🎁 Đi nhận quà</button>
 
 <!-- Nhạc -->
 <audio id="music" src="assets/music.mp3"></audio>
 
 <!-- Script pháo hoa -->
-<script src="fireworks.js"></script>
+<script src="assets/fireworks.js"></script>
 <script>
 window.onload = () => {
     const balloonCake = document.getElementById("balloonCake");
-    const balloons = document.getElementById("balloons");
-    const cake = document.getElementById("cake");
-    const instruction = document.getElementById("instruction");
-    const giftButton = document.getElementById("giftButton");
     const music = document.getElementById("music");
 
-    // Lúc đầu cụm ở ngoài màn hình
-    balloonCake.style.top = "150%";
+    // Load sẵn ảnh để tránh giật
+    new Image().src = "assets/cake_on1.gif";
+    new Image().src = "assets/cake_off.png";
 
-    // Kéo cụm lên giữa màn hình
+    // Kéo cụm bóng bay + bánh lên giữa
     setTimeout(() => {
-        balloonCake.style.transition = "top 4s ease-out";
-        balloonCake.style.top = "50%";
+        balloonCake.style.bottom = "50%";
     }, 500);
 
-    // Khi đã tới giữa → bóng bay biến mất + phát nhạc + bắn pháo hoa + hiện chữ hướng dẫn
+    // Khi tới giữa → bóng bay biến mất + phát nhạc + bắn pháo hoa
     setTimeout(() => {
-        balloons.style.opacity = 0;
+        document.getElementById("balloons").style.opacity = 0;
         music.play();
         startFireworks();
-        instruction.style.opacity = 1;
     }, 4500);
 
-    // Khi click vào bánh → đổi ảnh → hiện nút nhận quà
-    cake.addEventListener("click", () => {
-        cake.src = "assets/cake_off.png"; // đổi sang ảnh bánh đã tắt nến
-        instruction.style.display = "none"; // ẩn hướng dẫn
-        giftButton.style.display = "inline-block"; // hiện nút nhận quà
-    });
-
-    // Khi click nút nhận quà → chuyển sang screen3
-    giftButton.addEventListener("click", () => {
-        window.location.href = "screen3.html";
+    // Sự kiện click bánh để đổi trạng thái
+    document.getElementById("cakeWrapper").addEventListener("click", () => {
+        document.getElementById("cake_on").style.opacity = 0;
+        document.getElementById("cake_off").style.opacity = 1;
+        document.getElementById("hint").style.display = "none";
+        document.getElementById("giftBtn").style.display = "inline-block";
     });
 };
 
@@ -125,6 +141,11 @@ function startFireworks() {
     if (typeof initFireworks === "function") {
         initFireworks();
     }
+}
+
+// Chuyển sang màn hình 3
+function goToScreen3() {
+    window.location.href = "screen3.html";
 }
 </script>
 </body>
