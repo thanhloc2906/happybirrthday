@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Chúc mừng sinh nhật</title>
+<style>
+    body {
+        margin: 0;
+        background: black;
+        overflow: hidden;
+        height: 100vh;
+    }
+    #cake {
+        position: absolute;
+        bottom: -300px;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: bottom 3s ease-out;
+        z-index: 2;
+    }
+    #balloons {
+        position: absolute;
+        bottom: -500px;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: bottom 3s ease-out;
+        z-index: 3;
+    }
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="fireworks"></canvas>
+<img id="balloons" src="assets/balloons.png" alt="Balloons">
+<img id="cake" src="assets/cake.png" alt="Cake">
+<audio id="music" src="assets/happybirthday.mp3"></audio>
+
+<script src="fireworks.js"></script>
+<script>
+window.onload = () => {
+    const balloons = document.getElementById("balloons");
+    const cake = document.getElementById("cake");
+    const music = document.getElementById("music");
+
+    // Bật nhạc
+    music.play();
+
+    // Kéo bóng bay + bánh lên
+    setTimeout(() => {
+        balloons.style.bottom = "200px";
+        cake.style.bottom = "0px";
+    }, 500);
+
+    // Sau khi kéo xong, làm bóng bay biến mất
+    setTimeout(() => {
+        balloons.style.opacity = 0;
+    }, 3500);
+};
+</script>
+</body>
+</html>
