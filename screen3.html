@@ -2,133 +2,126 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Screen 3 - Mở quà</title>
+<title>Màn hình 3</title>
 <style>
     body {
         margin: 0;
         background: black;
         overflow: hidden;
         height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
+        text-align: center;
         color: white;
-        font-family: Arial, sans-serif;
     }
-
-    #giftBox {
-        position: relative;
-        width: 400px;
-        height: 400px;
-    }
-
-    #boxBottom {
+    canvas {
         position: absolute;
-        bottom: 0;
-        width: 100%;
-    }
-
-    #boxTop {
-        position: absolute;
-        top: 0;
-        width: 100%;
-        transition: transform 1s ease-out;
-        z-index: 2;
-    }
-
-    #giftImage {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 300px;
-        opacity: 0;
-        transition: opacity 1s ease-in;
+        top: 0; left: 0;
         z-index: 1;
     }
-
-    #openButton {
-        margin-top: 20px;
-        padding: 12px 25px;
-        font-size: 18px;
-        background: crimson;
-        border: none;
-        color: white;
-        border-radius: 8px;
-        cursor: pointer;
+    #giftBox {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3;
     }
-
-    #message {
+    #naphop, #thanhop {
+        width: 500px;
+    }
+    #naphop {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: top 1s;
+        z-index: 4;
+    }
+    #anhqua {
+        display: none;
+        width: 400px;
         margin-top: 20px;
+    }
+    #openBtn {
+        padding: 10px 20px;
         font-size: 20px;
-        min-height: 40px;
-        white-space: pre-wrap;
-        text-align: center;
+        background: gold;
+        color: black;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 20px;
     }
-
-    #authorBox {
+    #message {
+        font-size: 28px;
         margin-top: 15px;
+        display: none;
+    }
+    #author {
         font-size: 14px;
-        opacity: 0;
-        transition: opacity 1s ease-in;
+        margin-top: 10px;
+        opacity: 0.7;
+        display: none;
     }
 </style>
 </head>
 <body>
 
+<canvas id="fireworks"></canvas>
+
 <div id="giftBox">
-    <img id="boxTop" src="assets/naphop.png" alt="Nắp hộp">
-    <img id="boxBottom" src="assets/thanhop.png" alt="Thân hộp">
-    <img id="giftImage" src="assets/anhqua.jpg" alt="Ảnh quà">
+    <img id="naphop" src="assets/naphop.png">
+    <img id="thanhop" src="assets/thanhop.png">
+    <br>
+    <button id="openBtn">Mở quà 🎁</button>
+    <img id="anhqua" src="assets/anhqua.jpg">
+    <div id="message"></div>
+    <div id="author">Tác giả: Lộc Thành - SĐT: 0123456789</div>
 </div>
 
-<button id="openButton">Mở quà</button>
+<audio id="music" src="assets/music.mp3" loop></audio>
 
-<div id="message"></div>
-<div id="authorBox">Tác giả: Lộc Thành - SĐT: 0123456789</div>
-
+<script src="assets/fireworks.js"></script>
 <script>
-const boxTop = document.getElementById("boxTop");
-const giftImage = document.getElementById("giftImage");
-const messageEl = document.getElementById("message");
-const authorBox = document.getElementById("authorBox");
-const openButton = document.getElementById("openButton");
+window.onload = () => {
+    const naphop = document.getElementById("naphop");
+    const anhqua = document.getElementById("anhqua");
+    const message = document.getElementById("message");
+    const author = document.getElementById("author");
+    const openBtn = document.getElementById("openBtn");
+    const music = document.getElementById("music");
 
-openButton.addEventListener("click", () => {
-    // Bay nắp hộp lên
-    boxTop.style.transform = "translateY(-200px)";
-    
-    // Hiện ảnh quà
-    setTimeout(() => {
-        giftImage.style.opacity = 1;
-        typeMessage("Chúc mừng sinh nhật! 🎉\nChúc bạn tuổi mới nhiều niềm vui và hạnh phúc ❤️");
-    }, 800);
+    music.play();
+    startFireworks();
 
-    // Ẩn nút mở
-    openButton.style.display = "none";
-});
+    openBtn.addEventListener("click", () => {
+        naphop.style.top = "-200px";
+        setTimeout(() => {
+            anhqua.style.display = "block";
+            typeWriter("🎉 Chúc mừng sinh nhật! Chúc bạn luôn vui vẻ và hạnh phúc 🎉", message, () => {
+                author.style.display = "block";
+            });
+        }, 1000);
+    });
+};
 
-function typeMessage(text) {
+function typeWriter(text, element, callback) {
+    element.style.display = "block";
     let i = 0;
-    const speed = 50; // tốc độ gõ
-    messageEl.textContent = "";
-
-    function typeNext() {
+    function typing() {
         if (i < text.length) {
-            messageEl.textContent += text.charAt(i);
+            element.innerHTML += text.charAt(i);
             i++;
-            setTimeout(typeNext, speed);
+            setTimeout(typing, 50);
         } else {
-            // Hiện ô tác giả sau khi gõ xong
-            setTimeout(() => {
-                authorBox.style.opacity = 1;
-            }, 500);
+            if (callback) callback();
         }
     }
-    typeNext();
+    typing();
+}
+
+function startFireworks() {
+    if (typeof initFireworks === "function") {
+        initFireworks();
+    }
 }
 </script>
-
 </body>
 </html>
