@@ -5,57 +5,76 @@
 <title>Screen 3 - Mở quà</title>
 <style>
     body {
-        background-color: black;
         margin: 0;
+        padding: 0;
+        background: black;
         overflow: hidden;
         text-align: center;
-        font-family: Arial, sans-serif;
         color: white;
+        font-family: Arial, sans-serif;
     }
+
     #gift-container {
+        position: relative;
+        width: 250px;
+        height: 250px;
+        margin: 100px auto 0 auto;
+    }
+
+    #than-hop {
+        width: 100%;
+        height: auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    #nap-hop {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: -60px;
+        left: 0;
+        transition: transform 1s ease;
+        transform-origin: center bottom;
+        z-index: 2;
+    }
+
+    #anh-qua {
         position: absolute;
         top: 50%;
         left: 50%;
+        width: 0;
+        height: auto;
         transform: translate(-50%, -50%);
+        transition: width 2s ease;
+        z-index: 0;
     }
-    #gift-base {
-        width: 250px;
-    }
-    #gift-lid {
-        width: 250px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        transition: transform 1s ease;
-        transform-origin: bottom left;
-    }
-    #gift-image {
-        width: 200px;
+
+    #loi-chuc {
+        display: none;
         margin-top: 20px;
-        opacity: 0;
-        transition: transform 2s ease, opacity 2s ease;
+        font-size: 28px;
+        padding: 10px 20px;
+        border: 4px solid gold;
+        color: red;
+        font-weight: bold;
+        background-color: #fff5e1;
+        display: inline-block;
     }
-    #gift-button {
+
+    #mo-qua-btn {
         margin-top: 20px;
-        padding: 14px 30px;
-        font-size: 24px;
-        background-color: red;
-        color: white;
+        padding: 15px 30px;
+        font-size: 20px;
+        background-color: gold;
+        color: black;
         border: none;
         border-radius: 10px;
         cursor: pointer;
-    }
-    #wish {
-        display: none;
-        margin-top: 20px;
-        font-size: 26px;
-        color: red;
-        border: 4px solid gold;
-        padding: 10px 20px;
-        border-radius: 12px;
         font-weight: bold;
     }
-    #author {
+
+    #tac-gia {
         position: fixed;
         bottom: 10px;
         right: 10px;
@@ -65,40 +84,49 @@
 </style>
 </head>
 <body>
-<canvas id="fireworksCanvas"></canvas>
+
+<canvas id="fireworks"></canvas>
 
 <div id="gift-container">
-    <div style="position: relative;">
-        <img id="gift-lid" src="assets/naphop.png">
-        <img id="gift-base" src="assets/thanhop.jpg">
-    </div>
-    <button id="gift-button" onclick="openGift()">Mở quà</button>
-    <img id="gift-image" src="assets/anhqua.jpg">
-    <div id="wish">🎉 Chúc mừng sinh nhật 🎉</div>
+    <img id="nap-hop" src="assets/naphop.png" alt="Nắp hộp">
+    <img id="than-hop" src="assets/than hop.jpg" alt="Thân hộp">
+    <img id="anh-qua" src="assets/anhqua.jpg" alt="Ảnh quà">
 </div>
 
-<div id="author">editer by thanhloc - SĐT: 00823151088</div>
+<div>
+    <button id="mo-qua-btn">🎁 Mở quà</button>
+</div>
 
-<audio id="bg-music" src="assets/music.mp3" autoplay loop></audio>
+<div id="loi-chuc">Chúc mừng sinh nhật</div>
+
+<div id="tac-gia">Tác giả: Lộc Thành | 0123456789</div>
+
+<audio id="bg-music" src="assets/happy_birthday.mp3" autoplay loop></audio>
 
 <script src="assets/fireworks.js"></script>
 <script>
-    const lid = document.getElementById('gift-lid');
-    const img = document.getElementById('gift-image');
-    const wish = document.getElementById('wish');
+    const napHop = document.getElementById("nap-hop");
+    const anhQua = document.getElementById("anh-qua");
+    const moQuaBtn = document.getElementById("mo-qua-btn");
+    const loiChuc = document.getElementById("loi-chuc");
 
-    function openGift() {
-        lid.style.transform = "rotate(-60deg)";
+    moQuaBtn.addEventListener("click", () => {
+        // Nắp hộp mở ra
+        napHop.style.transform = "rotate(-45deg) translateY(-50px)";
+        
+        // Ảnh quà phóng ra
         setTimeout(() => {
-            img.style.opacity = 1;
-            img.style.transform = "scale(1.2)";
+            anhQua.style.width = "300px"; // to hơn thân hộp
         }, 500);
-        setTimeout(() => {
-            wish.style.display = "inline-block";
-        }, 2000);
-    }
 
-    startFireworks('fireworksCanvas');
+        // Hiện lời chúc
+        setTimeout(() => {
+            loiChuc.style.display = "inline-block";
+        }, 2500);
+
+        moQuaBtn.style.display = "none";
+    });
 </script>
+
 </body>
 </html>
