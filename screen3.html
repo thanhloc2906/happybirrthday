@@ -5,129 +5,100 @@
 <title>Screen 3 - Mở quà</title>
 <style>
     body {
-        background: black;
+        background-color: black;
         margin: 0;
         overflow: hidden;
         text-align: center;
         font-family: Arial, sans-serif;
+        color: white;
     }
     #gift-container {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        text-align: center;
-        z-index: 5;
     }
-    #box {
-        position: relative;
-        display: inline-block;
+    #gift-base {
+        width: 250px;
     }
-    #lid {
-        width: 300px;
+    #gift-lid {
+        width: 250px;
         position: absolute;
         top: 0;
         left: 0;
-        transition: transform 1s ease-in-out;
-        transform-origin: left bottom;
-        z-index: 3;
+        transition: transform 1s ease;
+        transform-origin: bottom left;
     }
-    #base {
-        width: 300px;
-        position: relative;
-        z-index: 2;
-    }
-    #gift-img {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
+    #gift-image {
+        width: 200px;
+        margin-top: 20px;
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0);
-        transition: all 2.5s ease-in-out;
-        z-index: 4;
+        transition: transform 2s ease, opacity 2s ease;
     }
-    #open-btn {
-        padding: 15px 30px;
-        font-size: 22px;
-        background: gold;
+    #gift-button {
+        margin-top: 20px;
+        padding: 14px 30px;
+        font-size: 24px;
+        background-color: red;
+        color: white;
         border: none;
         border-radius: 10px;
         cursor: pointer;
-        margin-top: 20px;
     }
     #wish {
         display: none;
         margin-top: 20px;
-        font-size: 28px;
+        font-size: 26px;
         color: red;
-        border: 3px solid gold;
-        padding: 10px;
-        border-radius: 10px;
-        width: fit-content;
-        margin-left: auto;
-        margin-right: auto;
-        background: rgba(0,0,0,0.7);
+        border: 4px solid gold;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: bold;
     }
     #author {
         position: fixed;
         bottom: 10px;
         right: 10px;
-        color: white;
         font-size: 14px;
-        z-index: 10;
-    }
-    canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 0;
+        color: #ccc;
     }
 </style>
 </head>
 <body>
-
 <canvas id="fireworksCanvas"></canvas>
-<audio id="bg-music" src="assets/music.mp3" autoplay loop></audio>
 
 <div id="gift-container">
-    <div id="box">
-        <img id="lid" src="assets/naphop.png" alt="Nắp hộp">
-        <img id="base" src="assets/thanhop.jpg" alt="Thân hộp">
-        <img id="gift-img" src="assets/anhqua.jpg" alt="Quà">
+    <div style="position: relative;">
+        <img id="gift-lid" src="assets/naphop.png">
+        <img id="gift-base" src="assets/thanhop.jpg">
     </div>
-    <div>
-        <button id="open-btn">Mở quà</button>
-    </div>
-    <div id="wish">Chúc mừng sinh nhật</div>
+    <button id="gift-button" onclick="openGift()">Mở quà</button>
+    <img id="gift-image" src="assets/anhqua.jpg">
+    <div id="wish">🎉 Chúc mừng sinh nhật 🎉</div>
 </div>
 
-<div id="author">Tác giả: thanhloc - SĐT: 0823151088</div>
+<div id="author">editer by thanhloc - SĐT: 00823151088</div>
+
+<audio id="bg-music" src="assets/music.mp3" autoplay loop></audio>
 
 <script src="assets/fireworks.js"></script>
 <script>
-    const lid = document.getElementById('lid');
-    const giftImg = document.getElementById('gift-img');
-    const openBtn = document.getElementById('open-btn');
+    const lid = document.getElementById('gift-lid');
+    const img = document.getElementById('gift-image');
     const wish = document.getElementById('wish');
 
-    openBtn.addEventListener('click', () => {
-        // Xoay nắp hộp mở ra
-        lid.style.transform = "rotate(-60deg) translate(-50px, -100px)";
-        
-        // Sau khi nắp mở, hiện quà và phóng to
+    function openGift() {
+        lid.style.transform = "rotate(-60deg)";
         setTimeout(() => {
-            giftImg.style.opacity = "1";
-            giftImg.style.transform = "translate(-50%, -50%) scale(3)";
-            giftImg.style.width = "400px";
-            
-            // Sau khi quà phóng to xong, hiện lời chúc
-            setTimeout(() => {
-                wish.style.display = "block";
-            }, 2500);
-        }, 1000);
-    });
-</script>
+            img.style.opacity = 1;
+            img.style.transform = "scale(1.2)";
+        }, 500);
+        setTimeout(() => {
+            wish.style.display = "inline-block";
+        }, 2000);
+    }
 
+    startFireworks('fireworksCanvas');
+</script>
 </body>
 </html>
