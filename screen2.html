@@ -20,12 +20,7 @@
         transition: top 5s ease-in-out;
         text-align: center;
     }
-    #balloons {
-        width: 750px;
-        display: block;
-        margin: 0 auto;
-    }
-    #cake {
+    #balloons, #cake {
         width: 750px;
         display: block;
         margin: 0 auto;
@@ -35,6 +30,11 @@
         margin-top: 10px;
         font-size: 24px;
         color: yellow;
+        animation: blink 1s infinite;
+    }
+    @keyframes blink {
+        0%, 50%, 100% { opacity: 1; }
+        25%, 75% { opacity: 0.5; }
     }
     #next-btn {
         display: none;
@@ -45,12 +45,23 @@
         border: none;
         border-radius: 10px;
         cursor: pointer;
+        transition: background 0.3s;
+    }
+    #next-btn:hover {
+        background: orange;
     }
     canvas {
         position: fixed;
         top: 0;
         left: 0;
         z-index: -1;
+    }
+    /* Fade out khi chuyển cảnh */
+    .fade-out {
+        animation: fadeOut 1s forwards;
+    }
+    @keyframes fadeOut {
+        to { opacity: 0; }
     }
 </style>
 </head>
@@ -62,9 +73,9 @@
 
 <div id="cake-container">
     <img id="balloons" src="assets/balloon.png" alt="Bóng bay">
-    <img id="cake" src="assets/cake_on1.gif" alt="Bánh sinh nhật">
+    <img id="cake" src="assets/cake_on1.gif" alt="Bánh sinh nhật" style="height:auto;">
     <div id="message">Ấn vào bánh để thổi nến</div>
-    <button id="next-btn" onclick="window.location.href='screen3.html'">Đi nhận quà</button>
+    <button id="next-btn">Đi nhận quà</button>
 </div>
 
 <script src="assets/fireworks.js"></script>
@@ -74,21 +85,36 @@
     const cake = document.getElementById('cake');
     const message = document.getElementById('message');
     const nextBtn = document.getElementById('next-btn');
+    const music = document.getElementById('bg-music');
 
-    // Kéo bánh lên
+    // Đảm bảo nhạc phát (nếu trình duyệt chặn autoplay)
+    document.body.addEventListener('click', () => {
+        if (music.paused) music.play();
+    }, { once: true });
+
+    // Kéo bánh + bóng bay lên
     setTimeout(() => {
-        cakeContainer.style.top = "750px";
+        cakeContainer.style.top = "150px";
         setTimeout(() => {
             balloons.style.display = "none";
             message.style.display = "block";
         }, 5000);
     }, 500);
 
-    // Khi ấn bánh
+    // Khi ấn vào bánh
     cake.addEventListener('click', () => {
+        cake.style.width = cake.offsetWidth + "px"; // giữ nguyên kích thước
         cake.src = "assets/cake_off.png";
         message.style.display = "none";
         nextBtn.style.display = "inline-block";
+    });
+
+    // Chuyển sang screen3 với fade-out
+    nextBtn.addEventListener('click', () => {
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+            window.location.href = 'screen3.html';
+        }, 1000);
     });
 </script>
 

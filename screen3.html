@@ -16,8 +16,8 @@
 
     #gift-container {
         position: relative;
-        width: 250px;
-        height: 250px;
+        width: 320px;
+        height: 320px;
         margin: 100px auto 0 auto;
     }
 
@@ -32,7 +32,7 @@
         width: 100%;
         height: auto;
         position: absolute;
-        top: -60px;
+        top: -80px;
         left: 0;
         transition: transform 1s ease;
         transform-origin: center bottom;
@@ -47,14 +47,14 @@
         height: auto;
         transform: translate(-50%, -50%);
         transition: width 2s ease;
-        z-index: 0;
+        z-index: 3; /* Ảnh trên cùng */
     }
 
     #loi-chuc {
         display: none;
         margin-top: 20px;
-        font-size: 28px;
-        padding: 10px 20px;
+        font-size: 32px;
+        padding: 12px 24px;
         border: 4px solid gold;
         color: red;
         font-weight: bold;
@@ -80,6 +80,16 @@
         right: 10px;
         font-size: 14px;
         color: #ccc;
+    }
+
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
     }
 </style>
 </head>
@@ -112,14 +122,14 @@
 
     moQuaBtn.addEventListener("click", () => {
         // Nắp hộp mở ra
-        napHop.style.transform = "rotate(-45deg) translateY(-50px)";
+        napHop.style.transform = "rotate(-45deg) translateY(-80px)";
         
         // Ảnh quà phóng ra
         setTimeout(() => {
-            anhQua.style.width = "300px"; // to hơn thân hộp
+            anhQua.style.width = "350px"; // To hơn thân hộp
         }, 500);
 
-        // Hiện lời chúc
+        // Hiện lời chúc sau khi ảnh xong
         setTimeout(() => {
             loiChuc.style.display = "inline-block";
         }, 2500);
