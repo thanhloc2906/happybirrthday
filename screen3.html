@@ -24,7 +24,7 @@
     #than-hop {
         width: 100%;
         position: relative;
-        top: 50px; /* thân hộp thấp hơn */
+        top: 50px; /* Thân hộp thấp hơn */
         z-index: 1;
     }
 
@@ -50,22 +50,21 @@
     }
 
     #loi-chuc {
-    position: absolute;
-    top: 62%;
-    left: 30%;
-    transform: translate(-50%, -50%) scale(0.8);
-    z-index: 999;
-    font-size: 32px;
-    padding: 32px 24px;
-    border: 4px solid gold;
-    color: red;
-    font-weight: bold;
-    background-color: #fff5e1;
-    border-radius: 10px;
-    opacity: 0;
-    display: none;
-}
-
+        position: absolute;
+        top: 62%;
+        left: 30%;
+        transform: translate(-50%, -50%) scale(0.8);
+        z-index: 999;
+        font-size: 32px;
+        padding: 32px 24px;
+        border: 4px solid gold;
+        color: red;
+        font-weight: bold;
+        background-color: #fff5e1;
+        border-radius: 10px;
+        opacity: 0;
+        display: none;
+    }
 
     #tac-gia {
         position: fixed;
@@ -123,45 +122,40 @@
     const bgMusic = document.getElementById("bg-music");
     const openBtn = document.getElementById("open-btn");
 
-    // Khi trang load => tự phát nhạc & pháo hoa
+    // Khi load trang => nhạc & pháo hoa
     window.onload = () => {
         bgMusic.play().catch(() => console.log("Trình duyệt chặn autoplay"));
         startFireworks(5000);
     };
 
-    // Nút mở quà
+    // Mở quà
     openBtn.addEventListener("click", () => {
-        // Nắp hộp bật lên
         napHop.style.transform = "rotate(-45deg) translateY(-120px)";
 
-        // Sau khi nắp bật lên, ảnh quà hiện ra
+        // Sau khi nắp bật => hiện ảnh quà
         setTimeout(() => {
             anhQua.style.width = "700px";
 
-            // Sau khi ảnh quà load xong thì hiện popup chữ kiểu gõ
+            // Khi ảnh quà hiện xong => hiện lời chúc
             setTimeout(() => {
-                typeWriterEffect("🎉 Chúc mừng sinh nhật 🎉");
-            }, 500);
-        }, 1500);
+                typeWriterEffect("🎉 Món quà đặc biệt nhất dành cho đời m chính là t.chúc mừng sinh nhật 🎉");
+            }, 2000);
+        }, 1000);
 
-        // Pháo hoa thêm lần nữa
+        // Bắn pháo hoa thêm lần nữa
         startFireworks(5000);
 
         // Ẩn nút mở
         openBtn.style.display = "none";
     });
 
-    // Hàm hiệu ứng gõ chữ
+    // Hiệu ứng gõ chữ
     function typeWriterEffect(text) {
         loiChuc.style.display = "inline-block";
         loiChuc.textContent = "";
-        loiChuc.style.transition = "all 0.5s ease";
-        loiChuc.style.transform = "scale(1)";
         loiChuc.style.opacity = "1";
-
         let i = 0;
-        const speed = 100; // tốc độ gõ (ms)
-
+        const speed = 100;
         const interval = setInterval(() => {
             loiChuc.textContent += text.charAt(i);
             i++;
@@ -169,7 +163,7 @@
         }, speed);
     }
 
-    // ==== Hàm pháo hoa (lấy từ assets/firework.js) ====
+    // Hàm pháo hoa
     function startFireworks(duration = 4000) {
         if (typeof Fireworks === "function") {
             new Fireworks({

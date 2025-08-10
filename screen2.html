@@ -19,6 +19,7 @@
         transform: translateX(-50%);
         transition: top 7s ease-in-out;
         text-align: center;
+        z-index: 10; /* bánh ở trên pháo hoa */
     }
     #balloons, #cake {
         width: 750px;
@@ -54,7 +55,10 @@
         position: fixed;
         top: 0;
         left: 0;
-        z-index: -1;
+        width: 100%;
+        height: 100%;
+        z-index: 5; /* pháo hoa ở dưới bánh */
+        pointer-events: none;
     }
     /* Fade out khi chuyển cảnh */
     .fade-out {
@@ -86,6 +90,16 @@
     const message = document.getElementById('message');
     const nextBtn = document.getElementById('next-btn');
     const music = document.getElementById('bg-music');
+
+    // Khởi động pháo hoa ngay khi vào trang
+    if (typeof Fireworks === "function") {
+        const fw = new Fireworks({
+            target: document.getElementById("fireworksCanvas"),
+            // nếu file fireworks.js của bạn hỗ trợ options thì thêm duration
+            duration: 0 // 0 = chạy vô hạn
+        });
+        fw.start && fw.start();
+    }
 
     // Đảm bảo nhạc phát (nếu trình duyệt chặn autoplay)
     document.body.addEventListener('click', () => {
