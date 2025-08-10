@@ -23,21 +23,19 @@
 
     #than-hop {
         width: 100%;
-        height: auto;
         position: relative;
-        top: 10px; /* hạ thân hộp xuống một chút */
+        top: 10px; /* thân hộp thấp hơn */
         z-index: 1;
     }
 
     #nap-hop {
         width: 100%;
-        height: auto;
         position: absolute;
         top: -90px;
         left: 0;
-        transition: transform 1s ease;
         transform-origin: center bottom;
         z-index: 2;
+        transition: transform 1s ease;
     }
 
     #anh-qua {
@@ -71,6 +69,17 @@
         color: #ccc;
     }
 
+    #open-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 20px;
+        background: gold;
+        color: black;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
     canvas {
         position: fixed;
         top: 0;
@@ -88,113 +97,68 @@
 
 <div id="gift-container">
     <img id="nap-hop" src="assets/naphop.png" alt="Nắp hộp">
-    <img id="than-hop" src="assets/thanhop.jpg" alt="Thân hộp">
+    <img id="than-hop" src="assets/than hop.jpg" alt="Thân hộp">
     <img id="anh-qua" src="assets/anhqua.jpg" alt="Ảnh quà">
 </div>
 
-<div id="loi-chuc">Chúc mừng sinh nhật</div>
+<div id="loi-chuc">🎉 Chúc mừng sinh nhật 🎉</div>
+
+<button id="open-btn">Mở quà</button>
 
 <div id="tac-gia">Tác giả: Lộc Thành | 0123456789</div>
 
 <audio id="bg-music" src="assets/music.mp3" autoplay loop></audio>
 
+<script src="assets/firework.js"></script>
 <script>
     const napHop = document.getElementById("nap-hop");
     const anhQua = document.getElementById("anh-qua");
     const loiChuc = document.getElementById("loi-chuc");
     const bgMusic = document.getElementById("bg-music");
+    const openBtn = document.getElementById("open-btn");
 
-    // ==== Pháo hoa ====
-    const canvas = document.getElementById("fireworks");
-    const ctx = canvas.getContext("2d");
-    let fireworks = [];
-
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    class Firework {
-        constructor(x, y, color) {
-            this.x = x;
-            this.y = y;
-            this.color = color;
-            this.particles = [];
-            for (let i = 0; i < 50; i++) {
-                this.particles.push({
-                    x: x,
-                    y: y,
-                    angle: Math.random() * 2 * Math.PI,
-                    speed: Math.random() * 3 + 2,
-                    alpha: 1
-                });
-            }
-        }
-        update() {
-            this.particles.forEach(p => {
-                p.x += Math.cos(p.angle) * p.speed;
-                p.y += Math.sin(p.angle) * p.speed;
-                p.alpha -= 0.02;
-            });
-            this.particles = this.particles.filter(p => p.alpha > 0);
-        }
-        draw() {
-            this.particles.forEach(p => {
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-    }
-
-    function loop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        fireworks.forEach(fw => {
-            fw.update();
-            fw.draw();
-        });
-        fireworks = fireworks.filter(fw => fw.particles.length > 0);
-        requestAnimationFrame(loop);
-    }
-    loop();
-
-    function startFireworks(duration = 4000) {
-        const colors = ["red", "yellow", "blue", "lime", "pink", "cyan", "orange"];
-        let interval = setInterval(() => {
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * canvas.height / 2;
-            fireworks.push(new Firework(x, y, colors[Math.floor(Math.random() * colors.length)]));
-        }, 200);
-        setTimeout(() => clearInterval(interval), duration);
-    }
-
-    // Khi load trang: mở quà tự động
+    // Khi trang load => tự phát nhạc & pháo hoa
     window.onload = () => {
-        // Nắp hộp mở
-        setTimeout(() => {
-            napHop.style.transform = "rotate(-45deg) translateY(-100px)";
-        }, 500);
+        bgMusic.play().catch(() => console.log("Trình duyệt chặn autoplay"));
+        startFireworks(5000);
+    };
 
-        // Ảnh quà hiện
+    // Nút mở quà
+    openBtn.addEventListener("click", () => {
+        // Nắp hộp bật lên
+        napHop.style.transform = "rotate(-45deg) translateY(-120px)";
+
+        // Sau 1.2s rơi xuống
+        setTimeout(() => {
+            napHop.style.transform = "rotate(0deg) translateY(0)";
+        }, 1200);
+
+        // Sau khi nắp bật lên, ảnh quà hiện
         setTimeout(() => {
             anhQua.style.width = "350px";
         }, 1500);
 
-        // Lời chúc xuất hiện sau khi quà mở
+        // Lời chúc xuất hiện
         setTimeout(() => {
             loiChuc.style.display = "inline-block";
         }, 3500);
 
-        // Nhạc tự phát
-        bgMusic.play().catch(() => console.log("Trình duyệt chặn autoplay"));
-
-        // Pháo hoa chạy
+        // Pháo hoa thêm lần nữa
         startFireworks(5000);
-    };
+
+        // Ẩn nút mở
+        openBtn.style.display = "none";
+    });
+
+    // ==== Hàm pháo hoa (lấy từ assets/firework.js) ====
+    function startFireworks(duration = 4000) {
+        if (typeof Fireworks === "function") {
+            new Fireworks({
+                target: document.getElementById("fireworks"),
+                duration: duration
+            });
+        }
+    }
 </script>
 
 </body>
