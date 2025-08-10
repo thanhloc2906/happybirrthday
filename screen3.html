@@ -17,6 +17,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         text-align: center;
+        z-index: 5;
     }
     #box {
         position: relative;
@@ -25,16 +26,16 @@
     #lid {
         width: 300px;
         position: absolute;
-        top: -150px;
+        top: 0;
         left: 0;
         transition: transform 1s ease-in-out;
-        transform-origin: bottom left;
-        z-index: 2;
+        transform-origin: left bottom;
+        z-index: 3;
     }
     #base {
         width: 300px;
         position: relative;
-        z-index: 1;
+        z-index: 2;
     }
     #gift-img {
         position: absolute;
@@ -42,9 +43,9 @@
         left: 50%;
         width: 0;
         opacity: 0;
-        transform: translate(-50%, -50%);
-        transition: all 2s ease-in-out;
-        z-index: 0;
+        transform: translate(-50%, -50%) scale(0);
+        transition: all 2.5s ease-in-out;
+        z-index: 4;
     }
     #open-btn {
         padding: 15px 30px;
@@ -66,6 +67,7 @@
         width: fit-content;
         margin-left: auto;
         margin-right: auto;
+        background: rgba(0,0,0,0.7);
     }
     #author {
         position: fixed;
@@ -73,19 +75,19 @@
         right: 10px;
         color: white;
         font-size: 14px;
+        z-index: 10;
     }
     canvas {
         position: fixed;
         top: 0;
         left: 0;
-        z-index: -1;
+        z-index: 0;
     }
 </style>
 </head>
 <body>
 
 <canvas id="fireworksCanvas"></canvas>
-
 <audio id="bg-music" src="assets/music.mp3" autoplay loop></audio>
 
 <div id="gift-container">
@@ -110,13 +112,19 @@
     const wish = document.getElementById('wish');
 
     openBtn.addEventListener('click', () => {
-        lid.style.transform = "rotate(-45deg)";
+        // Xoay nắp hộp mở ra
+        lid.style.transform = "rotate(-60deg) translate(-50px, -100px)";
+        
+        // Sau khi nắp mở, hiện quà và phóng to
         setTimeout(() => {
-            giftImg.style.width = "250px";
             giftImg.style.opacity = "1";
+            giftImg.style.transform = "translate(-50%, -50%) scale(3)";
+            giftImg.style.width = "400px";
+            
+            // Sau khi quà phóng to xong, hiện lời chúc
             setTimeout(() => {
                 wish.style.display = "block";
-            }, 2000);
+            }, 2500);
         }, 1000);
     });
 </script>
