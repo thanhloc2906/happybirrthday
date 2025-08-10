@@ -59,6 +59,9 @@
         font-weight: bold;
         background-color: #fff5e1;
         display: inline-block;
+        border-radius: 10px;
+        opacity: 0;
+        transform: scale(0.8);
     }
 
     #tac-gia {
@@ -101,7 +104,7 @@
     <img id="anh-qua" src="assets/anhqua.jpg" alt="Ảnh quà">
 </div>
 
-<div id="loi-chuc">🎉 Chúc mừng sinh nhật 🎉</div>
+<div id="loi-chuc"></div>
 
 <button id="open-btn">Mở quà</button>
 
@@ -128,20 +131,15 @@
         // Nắp hộp bật lên
         napHop.style.transform = "rotate(-45deg) translateY(-120px)";
 
-        // Sau 1.2s rơi xuống
-        setTimeout(() => {
-            napHop.style.transform = "rotate(0deg) translateY(0)";
-        }, 1200);
-
-        // Sau khi nắp bật lên, ảnh quà hiện
+        // Sau khi nắp bật lên, ảnh quà hiện ra
         setTimeout(() => {
             anhQua.style.width = "400px";
-        }, 1500);
 
-        // Lời chúc xuất hiện
-        setTimeout(() => {
-            loiChuc.style.display = "inline-block";
-        }, 5500);
+            // Sau khi ảnh quà load xong thì hiện popup chữ kiểu gõ
+            setTimeout(() => {
+                typeWriterEffect("🎉 Chúc mừng sinh nhật 🎉");
+            }, 500);
+        }, 1500);
 
         // Pháo hoa thêm lần nữa
         startFireworks(5000);
@@ -149,6 +147,24 @@
         // Ẩn nút mở
         openBtn.style.display = "none";
     });
+
+    // Hàm hiệu ứng gõ chữ
+    function typeWriterEffect(text) {
+        loiChuc.style.display = "inline-block";
+        loiChuc.textContent = "";
+        loiChuc.style.transition = "all 0.5s ease";
+        loiChuc.style.transform = "scale(1)";
+        loiChuc.style.opacity = "1";
+
+        let i = 0;
+        const speed = 100; // tốc độ gõ (ms)
+
+        const interval = setInterval(() => {
+            loiChuc.textContent += text.charAt(i);
+            i++;
+            if (i >= text.length) clearInterval(interval);
+        }, speed);
+    }
 
     // ==== Hàm pháo hoa (lấy từ assets/firework.js) ====
     function startFireworks(duration = 4000) {
