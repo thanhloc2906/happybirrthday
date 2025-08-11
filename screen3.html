@@ -19,6 +19,7 @@
         width: 550px;
         height: 550px;
         margin: 100px auto 0 auto;
+        z-index: 2;
     }
 
     #than-hop {
@@ -51,12 +52,12 @@
 
     #loi-chuc {
         position: absolute;
-        top: 62%;
-        left: 30%;
-        transform: translate(-50%, -50%) scale(0.8);
+        top: 75%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
         z-index: 999;
-        font-size: 32px;
-        padding: 32px 24px;
+        font-size: 28px;
+        padding: 20px 18px;
         border: 4px solid gold;
         color: red;
         font-weight: bold;
@@ -64,6 +65,7 @@
         border-radius: 10px;
         opacity: 0;
         display: none;
+        white-space: nowrap;
     }
 
     #tac-gia {
@@ -72,6 +74,7 @@
         right: 10px;
         font-size: 14px;
         color: #ccc;
+        z-index: 10;
     }
 
     #open-btn {
@@ -83,6 +86,7 @@
         border: none;
         border-radius: 10px;
         cursor: pointer;
+        z-index: 10;
     }
 
     canvas {
@@ -103,17 +107,18 @@
 <div id="gift-container">
     <img id="nap-hop" src="assets/naphop.png" alt="Nắp hộp">
     <img id="than-hop" src="assets/thanhop.jpg" alt="Thân hộp">
-    <img id="anh-qua" src="assets/anhqua.jpg" alt="Ảnh quà">
+    <img id="anh-qua" src="assets/anhqua1.jpg" alt="Ảnh quà">
 </div>
 
 <div id="loi-chuc"></div>
 
 <button id="open-btn">Mở quà</button>
 
-<div id="tac-gia">Tác giả: Lộc Thành | 0823151988</div>
+<div id="tac-gia">editer by  | 0823151088</div>
 
-<audio id="bg-music" src="assets/music.mp3" autoplay loop></audio>
+<audio id="bg-music" src="assets/music.mp3" loop></audio>
 
+<!-- file firework.js phải export hàm/constructor Fireworks như trước -->
 <script src="assets/firework.js"></script>
 <script>
     const napHop = document.getElementById("nap-hop");
@@ -122,28 +127,49 @@
     const bgMusic = document.getElementById("bg-music");
     const openBtn = document.getElementById("open-btn");
 
-    // Khi load trang => nhạc & pháo hoa
-    window.onload = () => {
-        bgMusic.play().catch(() => console.log("Trình duyệt chặn autoplay"));
-        startFireworks(5000);
-    };
+    // biến interval cho loop pháo hoa
+    let fireworkInterval = null;
 
-    // Mở quà
+    // fallback: nếu browser chặn autoplay thì play khi người dùng click bất kỳ lần đầu
+    function enableAudioOnFirstInteraction() {
+        function tryPlay() {
+            bgMusic.play().catch(() => {});
+            document.removeEventListener('click', tryPlay);
+            document.removeEventListener('keydown', tryPlay);
+        }
+        document.addEventListener('click', tryPlay, { once: true });
+        document.addEventListener('keydown', tryPlay, { once: true });
+    }
+
+    // Khi trang load => thử play nhạc & pháo hoa (vẫn có fallback)
+    window.addEventListener('DOMContentLoaded', () => {
+        // thử autoplay (nhiều browser sẽ chặn nếu chưa tương tác)
+        bgMusic.play().catch(() => console.log("Autoplay chặn, chờ tương tác người dùng"));
+        enableAudioOnFirstInteraction();
+
+        // bắt đầu vòng pháo hoa ngắn khi vào trang
+        loopFireworks(2500); // bật 1 đợt, mỗi 2.5s
+        setTimeout(() => stopLoopFireworks(), 8000); // dừng sau 8s
+    });
+
+    // Nút mở quà
     openBtn.addEventListener("click", () => {
+        // Nắp hộp bật lên
         napHop.style.transform = "rotate(-45deg) translateY(-120px)";
 
         // Sau khi nắp bật => hiện ảnh quà
         setTimeout(() => {
             anhQua.style.width = "700px";
 
-            // Khi ảnh quà hiện xong => hiện lời chúc
+            // Khi ảnh quà hiện xong => hiện lời chúc (gõ chữ)
             setTimeout(() => {
                 typeWriterEffect("🎉 Món quà đặc biệt nhất dành cho đời m chính là t.chúc mừng sinh nhật 🎉");
-            }, 2000);
-        }, 1000);
+            }, 1000);
+        }, 600);
 
-        // Bắn pháo hoa thêm lần nữa
-        startFireworks(5000);
+        // Pháo hoa bắn liên tục mạnh hơn khi mở quà
+        loopFireworks(1600); // mỗi 1.6s
+        setTimeout(() => stopLoopFireworks(), 10000); // dừng sau 10s
 
         // Ẩn nút mở
         openBtn.style.display = "none";
@@ -154,8 +180,9 @@
         loiChuc.style.display = "inline-block";
         loiChuc.textContent = "";
         loiChuc.style.opacity = "1";
+        loiChuc.style.transform = "translate(-50%, -50%) scale(1)";
         let i = 0;
-        const speed = 100;
+        const speed = 60; // ms giữa mỗi ký tự
         const interval = setInterval(() => {
             loiChuc.textContent += text.charAt(i);
             i++;
@@ -163,13 +190,34 @@
         }, speed);
     }
 
-    // Hàm pháo hoa
+    // Hàm khởi pháo hoa (dùng constructor Fireworks trong file firework.js)
     function startFireworks(duration = 4000) {
         if (typeof Fireworks === "function") {
+            // tạo object Fireworks (mỗi lần tạo là 1 đợt)
             new Fireworks({
                 target: document.getElementById("fireworks"),
                 duration: duration
             });
+        } else {
+            // nếu không có Fireworks thì không làm gì (giữ an toàn)
+            console.warn("Fireworks constructor không tìm thấy.");
+        }
+    }
+
+    // Vòng lặp pháo hoa liên tục
+    function loopFireworks(intervalTime = 3000) {
+        // nếu đã có interval thì clear trước tránh nhân lên
+        if (fireworkInterval) clearInterval(fireworkInterval);
+        startFireworks(intervalTime);
+        fireworkInterval = setInterval(() => {
+            startFireworks(intervalTime);
+        }, intervalTime);
+    }
+
+    function stopLoopFireworks() {
+        if (fireworkInterval) {
+            clearInterval(fireworkInterval);
+            fireworkInterval = null;
         }
     }
 </script>

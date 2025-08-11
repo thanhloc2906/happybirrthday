@@ -28,14 +28,26 @@
     }
     #message {
         display: none;
-        margin-top: 10px;
         font-size: 24px;
         color: yellow;
         animation: blink 1s infinite;
+        margin-bottom: 10px; /* tạo khoảng cách với bánh */
     }
     @keyframes blink {
         0%, 50%, 100% { opacity: 1; }
         25%, 75% { opacity: 0.5; }
+    }
+    #birthday-text {
+        display: none;
+        margin-top: 10px;
+        font-size: 28px;
+        color: pink;
+        text-shadow: 2px 2px 4px #ff0000;
+        animation: glow 2s infinite;
+    }
+    @keyframes glow {
+        0%, 100% { text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493; }
+        50% { text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493; }
     }
     #next-btn {
         display: none;
@@ -77,8 +89,9 @@
 
 <div id="cake-container">
     <img id="balloons" src="assets/balloon.png" alt="Bóng bay">
-    <img id="cake" src="assets/cake_on1.gif" alt="Bánh sinh nhật" style="height:auto;">
     <div id="message">Ấn vào bánh để thổi nến</div>
+    <img id="cake" src="assets/cake_on1.gif" alt="Bánh sinh nhật" style="height:auto;">
+    <div id="birthday-text">🎉 Hép pi bợt đây Linh NGU 🎉</div>
     <button id="next-btn">Đi nhận quà</button>
 </div>
 
@@ -88,20 +101,29 @@
     const balloons = document.getElementById('balloons');
     const cake = document.getElementById('cake');
     const message = document.getElementById('message');
+    const birthdayText = document.getElementById('birthday-text');
     const nextBtn = document.getElementById('next-btn');
     const music = document.getElementById('bg-music');
 
-    // Khởi động pháo hoa ngay khi vào trang
-    if (typeof Fireworks === "function") {
-        const fw = new Fireworks({
-            target: document.getElementById("fireworksCanvas"),
-            // nếu file fireworks.js của bạn hỗ trợ options thì thêm duration
-            duration: 0 // 0 = chạy vô hạn
-        });
-        fw.start && fw.start();
-    }
+    // Đảm bảo nhạc phát và pháo hoa chạy khi vào
+    window.addEventListener('load', () => {
+        if (music.paused) {
+            music.play().catch(() => {});
+        }
+        if (typeof startFireworks === "function") {
+            startFireworks(); // Hàm trong fireworks.js
+        }
+        // Nếu dùng class Fireworks
+        if (typeof Fireworks === "function") {
+            const fw = new Fireworks({
+                target: document.getElementById("fireworksCanvas"),
+                duration: 0 // 0 = chạy vô hạn
+            });
+            fw.start && fw.start();
+        }
+    });
 
-    // Đảm bảo nhạc phát (nếu trình duyệt chặn autoplay)
+    // Đảm bảo nhạc phát nếu bị chặn autoplay
     document.body.addEventListener('click', () => {
         if (music.paused) music.play();
     }, { once: true });
@@ -120,6 +142,7 @@
         cake.style.width = cake.offsetWidth + "px"; // giữ nguyên kích thước
         cake.src = "assets/cake_off.png";
         message.style.display = "none";
+        birthdayText.style.display = "block";
         nextBtn.style.display = "inline-block";
     });
 
